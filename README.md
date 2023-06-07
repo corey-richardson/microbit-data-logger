@@ -151,6 +151,9 @@ def clear_log():
     display.show(Image.NO)
 ```
 
+> Didn't work. <br>
+> Only apparent way to clear the data log is to flash the micro:bit.
+
 ### Realtime Plotting with Mu Code Editor
 
 Mu Code Editor could be used to provide a real time plot of x, y and z values. [Plotter Guide](https://codewith.mu/en/tutorials/1.2/plotter)
@@ -238,6 +241,10 @@ import serial
 These constants define the serial port to attempt a connection to, the [Baud Rate](https://en.wikipedia.org/wiki/Baud) of the board, the timeout bit, the number of datapoints to display at a time and the rate at which the plot will update.
 
 $$\text{LIMIT} \times \text{RATE} = \text{Number of Seconds Displayed}$$
+
+*The Baud Rate to use can be found or changed in the Device Manager.*
+
+![device--manager](/README_assets/device_manager.jpg)
 
 ```py
 # Windows Device Manager > Ports (COM & LPT) > "mbed Serial Port"
