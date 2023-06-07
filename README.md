@@ -4,26 +4,7 @@
 
 ## Contents
 
-- [aims](#aims)
-- [concerns](#concerns)
-- [relevant-practice-projects](#relevant-practice-projects)
-<br><br>
-- [research](#research)
-    - [initial-scripting](#initial-scripting)
-    - [scheduled-log-entries](#scheduled-log-entries)
-    - [clearing-the-log](#clearing-the-log)
-    - [realtime-plotting-with-mu-code-editor](#realtime-plotting-with-mu-code-editor)
-    - [realtime-plotting-with-matplotlib](#realtime-plotting-with-matplotlib)
-<br><br>
-- [visualing-the-microbit-data-connected](#visualing-the-microbit-data---connected)
-    - [connected-mainpy](#connected-mainpy)
-    - [connected-realtime-visualiser](#connected-realtime-visualiser)
-<br><br>
-- [visualing-the-microbit-data-not-connected](#visualing-the-microbit-data---not-connected)
-    - [process](#process)
-    - [not-connected-mainpy](#not-connected-mainpy)
-    - [not-connected-visualiser](#not-connected-visualiser)
-    - [not-connected-visualiser-3d](#not-connected-visualiser-3d)
+> UPDATE THIS
 
 ---
 
@@ -51,6 +32,7 @@ Could also be worth creating another script that works connected to a computer a
     - If no, need to get USB encryption exception permissions.
 
 ![teams_EA](/README_assets/teams_EA.PNG)
+
 - [ ] Can Mu be installed on a work laptop?
     - More specifically, is Mu *<u>allowed</u>* to be installed on a work laptop?
 
