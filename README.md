@@ -4,7 +4,42 @@
 
 ## Contents
 
-> UPDATE THIS
+Pre-requisite Knowledge, Research, Notes and Ideas
+- [aims](#aims)
+- [concerns](#concerns)
+- [relevant-practice-projects](#relevant-practice-projects)
+- [flashing-to-microbit](#flashing-to-microbit)
+- [research](#research)
+    - [initial-scripting](#initial-scripting)
+    - [scheduled-log-entries](#scheduled-log-entries)
+    - [clearing-the-log](#clearing-the-log)
+    - [realtime-plotting-with-mu-code-editor](#realtime-plotting-with-mu-code-editor)
+    - [realtime-plotting-with-matplotlib](#realtime-plotting-with-matplotlib)
+<br><br>
+
+Data Logging Visualisation via Serial Port
+- [visualing-the-microbit-data-connected](#visualing-the-microbit-data---connected)
+    - [connected-mainpy](#connected-mainpy)
+    - [connected-realtime-visualiser](#connected-realtime-visualiser)
+    - [connected-realtime-visualiser-3d](#connected-realtime-visualiser-3d)
+<br><br>
+
+Data Logging Visualisation via CSV Files
+- [visualing-the-microbit-data-not-connected](#visualing-the-microbit-data---not-connected)
+    - [process](#process)
+    - [not-connected-mainpy](#not-connected-mainpy)
+    - [not-connected-visualiser](#not-connected-visualiser)
+    - [not-connected-visualiser-3d](#not-connected-visualiser-3d)
+<br><br>
+
+Output GIFS
+- [output](#output)
+    - [serial-port-connection](#serial-port-connection)
+    - [from-csv-data](#from-csv-data)
+<br><br>
+
+Archery Accelerometer Recording
+- TODO
 
 ---
 
@@ -52,6 +87,24 @@ Could also be worth creating another script that works connected to a computer a
 - [Max-min temperature logger
 ](https://microbit.org/projects/make-it-code-it/maxmin-temperature-logger/)
     - How to use Python to read and write data to non-volatile storage that stays on your micro:bit even when the power is removed
+
+---
+
+## Flashing to micro:bit
+
+[Python micro:bit Web Editor](https://python.microbit.org/v/3)
+
+Click `Send to micro:bit`.
+
+![](/README_assets/1_web_editor.jpg)
+
+Follow instructions on screen.
+
+![](/README_assets/2_connect__cable.jpg)
+
+Connect to micro:bit.
+
+![](/README_assets/3_popup.jpg)
 
 ---
 
@@ -577,24 +630,6 @@ ax.set_zlim(-1500, 1500)
 
 plt.show()
 ```
-
----
-
-## Flashing to micro:bit
-
-[Python micro:bit Web Editor](https://python.microbit.org/v/3)
-
-Click `Send to micro:bit`.
-
-![](/README_assets/1_web_editor.jpg)
-
-Follow instructions on screen.
-
-![](/README_assets/2_connect__cable.jpg)
-
-Connect to micro:bit.
-
-![](/README_assets/3_popup.jpg)
 
 ---
 
