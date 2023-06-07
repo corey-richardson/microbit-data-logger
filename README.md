@@ -570,3 +570,35 @@ ax.set_zlim(-1500, 1500)
 
 plt.show()
 ```
+
+---
+
+## Flashing to micro:bit
+
+[Python micro:bit Web Editor](https://python.microbit.org/v/3)
+
+Click `Send to micro:bit`.
+
+![](/README_assets/1_web_editor.jpg)
+
+Follow instructions on screen.
+
+![](/README_assets/2_connect__cable.jpg)
+
+Connect to micro:bit.
+
+![](/README_assets/3_popup.jpg)
+
+---
+
+## Output
+
+### Serial Port Connection
+
+![connected-2d](/README_assets/connected_2d.gif)
+![connected-3d](/README_assets/connected_3d.gif)
+
+### From CSV Data
+
+![csv-2d](/README_assets/file_2d.gif)
+![csv-3d](/README_assets/file_3d.gif)
