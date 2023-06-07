@@ -42,12 +42,17 @@ Could also be worth creating another script that works connected to a computer a
 
 - [x] Is micro:bit storage non-volatile? *(Will the logs be erased when it is unplugged from power?)*
 > Data is stored on your micro:bit even when the power is disconnected. It's easy to access - no software is needed. Plug your micro:bit in to a computer, look in the MICROBIT drive and double-click the MY_DATA file to open it in a web browser.
+
 - [ ] Does the micro:bit have enough storage space to record data for the time frames I'm hoping to record?
 > Memory: 128 KB. Flash space: 512 KB.
+
 - [ ] Need to verify if micro:bit will work on work laptop.
     - If no, need to get USB encryption exception permissions.
+
+![teams_EA](/README_assets/teams_EA.PNG)
 - [ ] Can Mu be installed on a work laptop?
     - More specifically, is Mu *<u>allowed</u>* to be installed on a work laptop?
+    
 - [ ] Can I install Pip / PyPI Modules on a work laptop?
     - I believe I have all dependencies other than `PySerial` installed, would a USB transfer from an external device be possible?
 
