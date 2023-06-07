@@ -10,7 +10,6 @@ data = pd.read_csv(file, header=0, delimiter=",")
 x, y, z = data.x, data.y, data.z
 
 fig = plt.figure()
-
 ax = plt.axes(projection='3d')
 ax.plot3D(x, y, z)
 

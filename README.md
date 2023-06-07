@@ -248,9 +248,6 @@ The `print` command outputs to the USB serial port to be picked up by the connec
 ```py
 from matplotlib import pyplot as plt
 from matplotlib import animation
-from matplotlib import style
-import numpy as np
-import sys
 import serial
 ```
 
@@ -263,31 +260,20 @@ $$\text{LIMIT} \times \text{RATE} = \text{Number of Seconds Displayed}$$
 ```py
 # Windows Device Manager > Ports (COM & LPT) > "mbed Serial Port"
 PORT = 'COM3'
-BAUD_RATE = 115_200
+BAUD_RATE = 115_200 # ENSURE THIS MATCHES VALUE IN DEVICE MANAGER
 STOP = 1
 
-LIMIT = 20
-RATE = 50 # ms
+LIMIT = 75
+RATE = 5 # ms
 ```
 
 **Connect to Serial Port:**
 
 Create a connection to the board. If the connection fails to open, exit the program.
-
-
-
 ```py
-# Make connection
 ser = serial.Serial(PORT, BAUD_RATE, timeout=STOP)
-
-# Open connection and test if succeeded
-try:
-    ser.open()
-except serial.serialutil.SerialException:
-    sys.exit(f"Connection to Serial Port '{PORT}' Failed")
-    
-if ser.is_open:
-    print(f"Port Open on {ser.name}: \n{ser}\n")
+ser.close()
+ser.open()
 ```
 
 **Create Figure to Plot:**
@@ -301,58 +287,51 @@ ax = fig.add_subplot(1, 1, 1)
 **Initialise Lists for x, y and z Data:**
 
 ```py
-xs, ys, zs = [], [], []
+xs, ys, zs = [0]*LIMIT, [0]*LIMIT, [0]*LIMIT
 ```
 
 **Animate Function:**
 
 Create the function `animate` that will get called as an argument in `FuncAnimate` later.
 
-Read the line from the connection `ser`. This line is the output of the micro:bit's `print` statement. Split this line into `time`, `x`, `y` and `z` values.
+Read the line from the serial port connection. This is returned as a `byte` object so needs to be decoded with `.decode("utf-8")`. The parenthesis also need to be removed with `.strip()`. Then, cast the values to ints.
 
-Append each of the values to the respective lists, `times`, `xs`, `ys` or `zs`. Then, cut off these lists to only hold the `n` most recent values, where `n` is `LIMIT`.
+Create a list with length `LIMIT`. Append the current values to `xs`, `ys` and `zs`. Then, slice the list to only include the `n` most recent values, where `n` is `LIMIT`.
 
-Clear the previous axis `ax` and plot `times` against `xs`, `ys` and `zs` to update the plot with the recent values.
-
-Format / re-format the plots `xticks`, `title`, `ylabel` and `legend` characteristics.
+Once the lists have enough values in them, begin plotting.
 
 ```py
-def animate(times, xs, ys, zs):
-    # Parse data from Serial port
-    line = ser.readline()
-    time, x, y, z = line.split('.')
-    print(f"{line} PARSED_TO {time}: {x}, {y}, {z}")
+def animate(i, xs, ys, zs):
+        
+    line = ser.readline().decode("utf-8").strip("(").strip(")\r\n")
+    x, y, z = line.split(",")
+    x, y, z = int(x), int(y), int(z)
     
-    # Append new value to list
-    times.append(time)
+    print(x, y, z)
+    
+    idx = range(LIMIT)
     xs.append(x)
     ys.append(y)
     zs.append(z)
     
-    # Limit lists to LIMIT number of items (Removes oldest value)
-    times = times[-LIMIT:]
     xs = xs[-LIMIT:]
     ys = ys[-LIMIT:]
     zs = zs[-LIMIT:]
     
-    # Draw x, y and z lists
-    ax.clear()
-    ax.plot(times, xs, label="X")
-    ax.plot(times, ys, label="Y")
-    ax.plot(times, zs, label="Z")
-    
-    # Format the plot
-    plt.xticks(rotation=45, ha='right')
-    plt.subplots_adjust(bottom=0.30)
+    if len(xs) == LIMIT:
+        ax.clear()
+        ax.plot(idx, xs, label="X")
+        ax.plot(idx, ys, label="Y")
+        ax.plot(idx, zs, label="Z")
+        
+    ax.set_ylim(-1500, 1500)
     plt.title("micro:bit Data Logger")
     plt.ylabel("Magnitude")
-    plt.legend()
-    plt.axis([1, None, 0, 1.1])
 ```
 
 **Create and Plot Animation:**
 
-Create the animation. This will call the `FuncAnimation` `animate` with arguments `xs`, `ys` and `zs` every `RATE` milliseconds.
+Create the animation. This will call the `FuncAnimation` `animate` with arguments `xs`, `ys` and `zs` every `RATE` milliseconds. This occurs until the user causes a `KeyboardInterrupt` exception with <kbd>Ctrl</kbd>+<kbd>C</kbd>.
 
 ```py
 ani = animation.FuncAnimation(
@@ -360,8 +339,89 @@ ani = animation.FuncAnimation(
     animate, fargs=(xs, ys, zs), 
     interval=RATE )
 
-plt.show(block=False)
+plt.show()
+
+try:
+    pass
+except KeyboardInterrupt:
+    ser.close()
 ```
+
+### Connected Realtime Visualiser 3D
+
+A lot of this code is repeated from the 2D visualiser. Some exceptions include:
+- `RATE` and `LIMIT` values
+    - I had to increase the `RATE` constant (which decreases the rate - 1/n) and decrease the `LIMIT` constant which controls how many datapoints are displayed in order to avoid overloading the animation function. Even now, eventually the animation falls out of sync with the micro:bit's movements.
+- `ax = plt.axes(projection='3d')`
+    - Creates a 3D Axis to plot data on.
+- `ax.plot3D(xs, ys, zs)`
+    - Creates a line plot with `xs`, `ys` and `zs` as data inputs.
+
+
+```py
+from matplotlib import pyplot as plt
+from matplotlib import animation
+import serial
+
+# Windows Device Manager > Ports (COM & LPT) > "mbed Serial Port"
+PORT = 'COM3'
+BAUD_RATE = 115_200 # ENSURE THIS MATCHES VALUE IN DEVICE MANAGER
+STOP = 1
+
+LIMIT = 50
+RATE = 50 # ms
+
+ser = serial.Serial(PORT, BAUD_RATE, timeout=STOP)
+ser.close()
+ser.open()
+
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+
+xs, ys, zs = [0]*LIMIT, [0]*LIMIT, [0]*LIMIT
+
+
+def animate(i, xs, ys, zs):
+    
+    line = ser.readline().decode("utf-8").strip("(").strip(")\r\n")
+    x, y, z = line.split(",")
+    x, y, z = int(x), int(y), int(z)
+    
+    print(x, y, z)
+    
+    idx = range(LIMIT)
+    xs.append(x)
+    ys.append(y)
+    zs.append(z)
+    
+    xs = xs[-LIMIT:]
+    ys = ys[-LIMIT:]
+    zs = zs[-LIMIT:]
+    
+    if len(xs) == LIMIT:
+        ax.clear()
+        ax.plot3D(xs, ys, zs)
+        
+    ax.set_xlim(-1500, 1500)
+    ax.set_ylim(-1500, 1500)
+    ax.set_zlim(-1500, 1500)
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    ax.set_zlabel("z")
+        
+ani = animation.FuncAnimation(
+    fig, 
+    animate, fargs=(xs, ys, zs), 
+    interval=RATE )
+
+plt.show()
+
+try:
+    pass
+except KeyboardInterrupt:
+    ser.close()
+```
+
 
 ---
 
@@ -391,32 +451,6 @@ import log, os
 log.set_labels('x', 'y', 'z', 'strength')
 ```
 
-**Define the `clear_log` function:**
-
-Firstly, this function will disable `logging` to ensure the file is not being written to as it is deleted.
-
-It will then display the `SWORD` image on the micro:bit's LED panel to indicate it is clearing the log.
-
-Next, it will attempt to delete `"MY_DATA.HTM"` using `os.remove()`. If it cannot find it then it will attempt to delete `"MY_DATA.HTML"`. If neither file can be found it will display a flashing `SAD` face on the LED display panel 4 times.
-
-```py
-def clear_log():
-    logging = False
-    display.show(Image.SWORD) 
-    try:	
-        os.remove("MY_DATA.HTM") # Check this actually works lol
-    except FileNotFoundError:
-        try:
-            os.remove("MY_DATA.HTML")
-        except FileNotFoundError:
-            for i in range(4):
-                display.show(Image.SAD)
-                sleep(500)
-                display.clear()
-                sleep(250)    
-    display.show(Image.NO)
-```
-
 **Define the `logger` function:**
 
 This is the function that records the `x`, `y`, `z` and `strength` values from the accelerometer into `"MY_DATA"`.
@@ -426,8 +460,7 @@ def logger():
     log.add({
         'x': accelerometer.get_x(),
         'y': accelerometer.get_y(),
-        'z': accelerometer.get_z(),
-        'strength': accelerometer.get_strength()
+        'z': accelerometer.get_z()
     })
 ```
 
@@ -453,7 +486,6 @@ while True:
     # On "A" button pressed...
     # Clear the log, set logging to True and update displayed icon
     if button_a.is_pressed():
-        clear_log()
         logging = True
         display.show(Image.YES)
         
@@ -462,11 +494,6 @@ while True:
     if button_b.is_pressed():
         logging = False
         display.show(Image.NO)
-
-    # On "A" and "B" button pressed...
-    # Clear the log
-    if button_a.is_pressed() and button_b.is_pressed():
-        clear_log()
 
     # If logging is set to True...
     # Call the logging function and record values
@@ -487,25 +514,12 @@ from scipy import signal
 
 **File Selection and Reading:**
 
-Opens a File Explorer window allowing the user to select the `.csv` file to plot. This file is read into a `panda` `Dataframe` Object using a period `.` as the delimiter.
+Opens a File Explorer window allowing the user to select the `.csv` file to plot. This file is read into a `panda` `Dataframe` Object using a comma `,` as the delimiter. `.reset_index()` creates an `index` column which is used as the x-variable during plotting.
 ```py
 file = fd.askopenfilename(
     filetypes=[("CSV files", "*.csv")],title="Set input .csv file" )
 
-data = pd.read_csv(file, delimiter=".")
-```
-
-**Get value for `ylim`:**
-
-Get the value with the highest magnitude (absolute value). This value (+10% to ensure that the data isn't plotted on the axis border) is used as the positive and negative `ylim` property of the axis.
-```py
-# Get maximum magnitude + 10% for use as y limit
-max_x, max_y, max_z = max(data.x), max(data.y), max(data.z)
-min_x, min_y, min_z = min(data.x), min(data.y), min(data.z)
-min_x, min_y, min_z = abs(min_x), abs(min_y), abs(min_z)
-max_strength, min_strength = max(data.strength), min(data.strength)
-limit = max(max_x, max_y, max_z, min_x, min_y, min_z, max_strength, min_strength)
-limit *= 1.1
+data = pd.read_csv(file, header=0, delimiter=",").reset_index()
 ```
 
 **Plot Data:**
@@ -515,8 +529,6 @@ Plot `Time` against `x`, `y`, `z` and `strength`. Assign each property its own c
 plt.plot(data["Time (seconds)"], data.x, "r", label="X")
 plt.plot(data["Time (seconds)"], data.y, "g", label="Y")
 plt.plot(data["Time (seconds)"], data.z, "b", label="Z")
-
-plt.plot(data["Time (seconds)"], data.strength, "k", label="strength")
 ```
 
 **Format the Plot:**
@@ -524,10 +536,17 @@ plt.plot(data["Time (seconds)"], data.strength, "k", label="strength")
 ```py
 plt.title("micro:bit Data Logger")
 plt.ylabel("Magnitude")
-plt.ylim(-limit, limit)
+plt.ylim(-1500, 1500)
 plt.legend()
+```
 
-plt.show()
+**Plot Peaks:**
+
+Plot vertical lines at signal peaks; sudden movements.
+```py
+peaks, props = signal.find_peaks(data.strength, threshold=150)
+for peak in peaks:
+    plt.axvline(peak, color="k")
 ```
 
 ### Not Connected Visualiser 3D
@@ -542,12 +561,12 @@ import matplotlib.pyplot as plt
 
 **File Selection and Reading:**
 
-Opens a File Explorer window allowing the user to select the `.csv` file to plot. This file is read into a `panda` `Dataframe` Object using a period `.` as the delimiter.
+Opens a File Explorer window allowing the user to select the `.csv` file to plot. This file is read into a `panda` `Dataframe` Object using a comma `,` as the delimiter. `.reset_index()` creates an `index` column which is used as the x-variable during plotting.
 ```py
 file = fd.askopenfilename(
     filetypes=[("CSV files", "*.csv")],title="Set input .csv file" )
 
-data = pd.read_csv(file, delimiter=".")
+data = pd.read_csv(file, header=0, delimiter=",")
 ```
 
 This line assigns in parallel the columns from `data` to their own variables. It is not entirely necessary but does *slightly* improve readability.
@@ -560,9 +579,12 @@ x, y, z = data.x, data.y, data.z
 Create the figure `fig` and 3D axis `ax`. Plot the data as a continuous line showing the movement of the micro:bit.
 ```py
 fig = plt.figure()
-
 ax = plt.axes(projection='3d')
 ax.plot3D(x, y, z, color='k')
+
+ax.set_xlim(-1500, 1500)
+ax.set_ylim(-1500, 1500)
+ax.set_zlim(-1500, 1500)
 
 plt.show()
 ```
