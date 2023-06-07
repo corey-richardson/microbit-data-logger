@@ -7,6 +7,7 @@
 - [aims](#aims)
 - [concerns](#concerns)
 - [relevant-practice-projects](#relevant-practice-projects)
+<br><br>
 - [research](#research)
     - [initial-scripting](#initial-scripting)
     - [scheduled-log-entries](#scheduled-log-entries)
@@ -52,7 +53,7 @@ Could also be worth creating another script that works connected to a computer a
 ![teams_EA](/README_assets/teams_EA.PNG)
 - [ ] Can Mu be installed on a work laptop?
     - More specifically, is Mu *<u>allowed</u>* to be installed on a work laptop?
-    
+
 - [ ] Can I install Pip / PyPI Modules on a work laptop?
     - I believe I have all dependencies other than `PySerial` installed, would a USB transfer from an external device be possible?
 
