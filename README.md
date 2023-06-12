@@ -77,6 +77,8 @@ Final Project and Presentation - Archery Data Logger
 - [x] Need to verify if micro:bit will work on work laptop.
     > :red_circle: Works with USB R/W permissions, not with Read Only Permissions. May have to use non-networked laptops OR the BBC micro:bit app.
 
+- [ ] If the students are going to do data analysis via Excel, it will have to be installed for them onto a non-networked laptop. Same applies if they want to use Python or Matlab etc.
+
 ---
 
 ## Relevant Practice Projects
