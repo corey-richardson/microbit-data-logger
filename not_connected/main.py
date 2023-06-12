@@ -2,7 +2,7 @@ from microbit import *
 import log
 
 # Set up columns for logging
-log.set_labels('x', 'y', 'z', 'strength')
+log.set_labels('x', 'y', 'z')
 
 # Record the x, y, z and Pythagorean combined value 
 def logger():
