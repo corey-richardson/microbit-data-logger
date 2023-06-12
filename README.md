@@ -513,6 +513,7 @@ plt.show()
 ### From CSV Data
 
 ![csv-2d](/README_assets/file_2d.gif)
+![csv-2d-w-deltas](/README_assets/raw_and_deltas.png)
 ![csv-3d](/README_assets/file_3d.gif)
 ![csv-3d-with-ref-lines](/README_assets/not_connected_3d.png)
 
