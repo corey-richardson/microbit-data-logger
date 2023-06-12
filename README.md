@@ -4,28 +4,20 @@
 
 ## Contents
 
-Pre-requisite Knowledge, Research, Notes and Ideas
 - [aims](#aims)
 - [concerns](#concerns)
 - [relevant-practice-projects](#relevant-practice-projects)
-- [flashing-to-microbit](#flashing-to-microbit)
-- [research](#research)
-    - [initial-scripting](#initial-scripting)
-    - [scheduled-log-entries](#scheduled-log-entries)
-    - [clearing-the-log](#clearing-the-log)
-    - [realtime-plotting-with-mu-code-editor](#realtime-plotting-with-mu-code-editor)
-    - [realtime-plotting-with-matplotlib](#realtime-plotting-with-matplotlib)
+- [flashing-to-microbit-using-web-based-text-editor](#flashing-to-microbit-using-web-based-text-editor)
 <br><br>
 
 Data Logging Visualisation via Serial Port
-- [visualing-the-microbit-data-connected](#visualing-the-microbit-data---connected)
-    - [connected-mainpy](#connected-mainpy)
+- [visualing-the-microbit-data-via-usb-cable](#visualing-the-microbit-data-via-usb-cable)
     - [connected-realtime-visualiser](#connected-realtime-visualiser)
     - [connected-realtime-visualiser-3d](#connected-realtime-visualiser-3d)
 <br><br>
 
 Data Logging Visualisation via CSV Files
-- [visualing-the-microbit-data-not-connected](#visualing-the-microbit-data---not-connected)
+- [visualing-the-microbit-with-csv-data](#visualing-the-microbit-with-csv-data)
     - [process](#process)
     - [not-connected-mainpy](#not-connected-mainpy)
     - [not-connected-visualiser](#not-connected-visualiser)
@@ -38,7 +30,7 @@ Output GIFS
     - [from-csv-data](#from-csv-data)
 <br><br>
 
-Archery Accelerometer Recording
+Final Project and Presentation - Archery Data Logger
 - [final-project-and-presentation](#final-project-and-presentation)
     - [project-selection](#project-selection)
     - [why](#why)
@@ -51,13 +43,21 @@ Archery Accelerometer Recording
 
 ## Aims
 
-- Flash software to the *BBC micro:bit* that will record accelerometer data.
-- This could either be done via multiple micro:bits using radio transmissions as shown [here](https://microbit.org/projects/make-it-code-it/python-wireless-data-logger/) or via the `log` module as described [here](https://microbit.org/get-started/user-guide/data-logging/); this would only require one device.
-- Then, write a Python script to do analysis on and plot the recorded data.
-
-An interesting scenario to record could be archery. This would show how movement / stabilisation changes throughout the shot process and the vibrations and forces involved during the loose of an arrow. This would be similar to a commercial product called the "Mantis X8 Archery Training Tool for Marksmanship" which measures shot feedback, allowing the archer to visualise movements that the human eye will not see.
-
-Could also be worth creating another script that works connected to a computer and plots the data in real-time.  This may be able to be done with "Mu" Code Editor.
+- Find the process of flashing software to the BBC micro:bit
+- Use one of the micro:bit practice projects to familarise myself with the micro:bit capabilities and process; [data-logging-project](https://microbit.org/get-started/user-guide/data-logging/)
+- Use Python scripts to output the data as graphs.
+    - This could be done as a realtime data logger or as plots taken from `.csv` data.
+- Create a presentation on a "commercial product" using the micro:bit, writing about the following stages:
+    - Project Selection
+    - Why?
+    - What Went Well
+    - Lessons Learned
+    - Testing and Results
+    - Potential Application
+> This could be used by the students as an example of what their presentations should consist of.
+- All the while, thnk of how this could be tailored to students of varying experience levels and interests.
+    - MakeCode Blocks vs Python
+    - How could it be linked to their interests?
 
 ---
 
@@ -69,36 +69,26 @@ Could also be worth creating another script that works connected to a computer a
 - [x] Does the micro:bit have enough storage space to record data for the time frames I'm hoping to record?
 > Memory: 128 KB. Flash space: 512 KB.
 
-- [x] Can Mu be installed on a work laptop?
-    > :x: Mu does not need to be installed as BBC micro:bit offers an online code editor [here](https://python.microbit.org/v/3/reference/data-logging).
-    - More specifically, is Mu *<u>allowed</u>* to be installed on a work laptop?
-
 - [x] Can I install Pip / PyPI Modules on a work laptop?
     > :x: Pip / PyPI cannot be used to install Python packages on a work laptop. A different idea would be to supply the students with an executable version of the various plotting scripts. These `.exe` files could be created with [auto-py-to-exe](https://pypi.org/project/auto-py-to-exe/). 
     - I believe I have all dependencies other than `PySerial` installed, would a USB transfer from an external device be possible?
 
-- [ ] Need to verify if micro:bit will work on work laptop.
-    - If no, need to get USB encryption exception permissions.
-
-![teams_EA](/README_assets/teams_EA.PNG)
+- [x] Need to verify if micro:bit will work on work laptop.
+    > :red_circle: Works with USB R/W permissions, not with Read Only Permissions. May have to use non-networked laptops OR the BBC micro:bit app.
 
 ---
 
 ## Relevant Practice Projects
 
+- [micro:bit Projects](https://microbit.org/projects/make-it-code-it/)
 - [Meet your micro:bit](https://microbit.org/projects/make-it-code-it/meet-your-microbit/?editor=python)
-- [Python Data Logger](https://microbit.org/projects/make-it-code-it/python-wireless-data-logger/) - Modify to use `log` module, only one device.
-    - Connect the receiver micro:bit to a computer by USB and flash the logger program on to it using the Mu Python editor app.
-    - Mu saves the numerical data as a CSV (comma separated values) file in your computer's home folder. Look in 'mu_code' and then the 'data_capture' folder.
-    - You can open the CSV file in a spreadsheet program to analyse. If you delete the second and third time columns, leaving only the first, you can plot the data on a scatter graph in your spreadsheet showing how the forces change over time.
-    - [codewith.mu](https://codewith.mu/)
-- [Max-min temperature logger
-](https://microbit.org/projects/make-it-code-it/maxmin-temperature-logger/)
-    - How to use Python to read and write data to non-volatile storage that stays on your micro:bit even when the power is removed
+- [MakeCode Data Logger](https://microbit.org/projects/make-it-code-it/makecode-wireless-data-logger/)
+- [Python Data Logger](https://microbit.org/projects/make-it-code-it/python-wireless-data-logger/)
+- [Max-Min Temperature Logger](https://microbit.org/projects/make-it-code-it/max-min-thermometer/?editor=makecode)
 
 ---
 
-## Flashing to micro:bit
+## Flashing to micro:bit using Web Based Text Editor
 
 [Python micro:bit Web Editor](https://python.microbit.org/v/3)
 
@@ -116,162 +106,7 @@ Connect to micro:bit.
 
 ---
 
-## Research
-
-### Initial Scripting
-
-```py
-from microbit import *
-import log, os
-
-# Set up columns for logging
-log.set_labels('x', 'y', 'z', 'strength')
-
-def clear_log():
-    logging = False
-    display.show(Image.SWORD) 	
-    os.remove("MY_DATA.HTM") # Check this actually works lol
-    display.show(Image.NO)
-
-# Record the x, y, z and Pythagorean combined value 
-def logger():
-    log.add({
-        'x': accelerometer.get_x(),
-        'y': accelerometer.get_y(),
-        'z': accelerometer.get_z(),
-        'strength': accelerometer.get_strength()
-    })
-
-# Pre initialise 'logging' as False / OFF
-logging = False
-
-while True:
-    sleep(50) # milliseconds
-    # On "A" button pressed...
-    # Clear the log, set logging to True and update displayed icon
-    if button_a.is_pressed():
-        clear_log()
-        logging = True
-        display.show(Image.YES)
-        
-    # On "B" button pressed...
-    # Set logging to False and update displayed icon
-    if button_b.is_pressed():
-        logging = False
-        display.show(Image.NO)
-
-    # On "A" and "B" button pressed...
-    # Clear the log
-    if button_a.is_pressed() and button_b.is_pressed():
-        clear_log()
-
-    # If logging is set to True...
-    # Call the logging function and record values
-    if logging:
-        logger()
-```
-
-Would a single button work better to activate and deactivate logging?
-```py
-logging = False
-while True:
-    if button_a.is_pressed():
-        logging = not logging
-```
-
-### Scheduled Log Entries
-
-Is there any way I could use *Scheduled Log Entries" here?
-```py
-import log
-
-@run_every(s=30)
-def log_data():
-    log.add({
-      'temperature': temperature(),
-      'sound': microphone.sound_level(),
-      'light': display.read_light_level()
-    })
-    
-while True:
-    sleep(100000)
-```
-
-### Clearing the Log
-
-> In *MakeCode*, the 'delete log' block contains two options: the fast delete and the full delete, as shown in the image below.
-> - A "fast" delete method will invalidate your data and mark the MY_DATA log file as empty, but the data log remains in the file. It is the quickest method to erase the data log from your micro:bit, but it is not the cleanest as the data still remains in the file.
-> - A 'full' delete method will clean all the data from the MY_DATA log file. It is the cleanest method to erase data logs. This process will take some time, but it is more efficient as it cleans the micro:bit completely.
-
-How do I delete log with Python? `os.remove()`?
-```py
-def clear_log():
-    logging = False
-    display.show(Image.SWORD) 	
-    os.remove("MY_DATA.HTM") # Check this actually works lol
-    display.show(Image.NO)
-```
-
-> Didn't work. <br>
-> Only apparent way to clear the data log is to flash the micro:bit.
-
-### Realtime Plotting with Mu Code Editor
-
-Mu Code Editor could be used to provide a real time plot of x, y and z values. [Plotter Guide](https://codewith.mu/en/tutorials/1.2/plotter)
-
-[Mu and micro:bit](https://codewith.mu/en/tutorials/1.2/microbit)
-
-![Mu Plotter Anim](https://codewith.mu/img/en/tutorials/python3_plotter.gif)
-
-![Flashing](https://codewith.mu/img/en/tutorials/microbit_flash.gif)
-
-![Moving Files between Devices](https://codewith.mu/img/en/tutorials/microbit_files.gif)
-
-```py
-from microbit import *
-
-while True:
-    sleep(50) # milliseconds
-    print(accelerometer.get_values())
-    # Use CodeWithMu to plot real time
-
-
-# Ensure .get_values() outputs in correct format:
-# (x, y, z)
-# NOT
-# x, y, z
-# [x, y, z]
-```
-
-### Realtime Plotting with Matplotlib
-
-**Serial Data**
-
-You can send and receive data over serial on the micro:bit.
-In Python, the `print` statement sends a string from the micro:bit to the connected computer over serial.
-
-```
-pip install pyserial
-```
-
-- Baud rate  = 115200
-- Data = 8 bits
-- Parity  = none
-- Stop  = 1 bit
-<br><br>
-- Initialise Serial Port
-- Create Figure for Plotting
-- Initialise 'animate' function to be called by `FuncAnimation`
-    - Parse Serial Data
-    - Add x, y and z to lists
-    - Limit lists to 'n' values
-    - Draw lists
-    - Format Plot (Titles, Labels, etc)
-- Set up plot to call animate() 
-
----
-
-## Visualing the micro:bit Data - Connected
+## Visualing the micro:bit Data via USB Cable
 
 ### Connected main.py
 
@@ -479,7 +314,7 @@ except KeyboardInterrupt:
 
 ---
 
-## Visualing the micro:bit Data - Not Connected
+## Visualing the micro:bit with CSV Data
 
 ### Process
 
@@ -665,6 +500,8 @@ plt.show()
 ---
 
 ## Final Project and Presentation
+
+An interesting scenario to record could be archery. This would show how movement / stabilisation changes throughout the shot process and the vibrations and forces involved during the loose of an arrow. This would be similar to a commercial product called the "Mantis X8 Archery Training Tool for Marksmanship" which measures shot feedback, allowing the archer to visualise movements that the human eye will not see.
 
 ### Project Selection
 
