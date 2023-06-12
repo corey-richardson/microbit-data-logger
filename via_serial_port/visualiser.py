@@ -58,8 +58,8 @@ def animate(i, xs, ys, zs):
         d_ax.plot(d_idx, d_zs, color="b")
         d_ax.axhline(0, color="k")
     
-    ax.set_ylim(-4500, 4500)
-    d_ax.set_ylim(-4500, 4500)
+    ax.set_ylim(-1500, 1500)
+    d_ax.set_ylim(-1500, 1500)
 
     ax.legend()
 
