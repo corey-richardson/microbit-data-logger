@@ -19,35 +19,34 @@ ax = fig.add_subplot(2, 1, 1)
 d_ax = fig.add_subplot(2, 1, 2)
 
 roller = 5
-
 rolling = data.rolling(roller).mean().dropna()
-print(rolling)
 
 # Plot the data
 ax.plot(data.time, data.x, "r--", label="X", alpha=0.3)
 ax.plot(data.time, data.y, "g--", label="Y", alpha=0.3)
 ax.plot(data.time, data.z, "b--", label="Z", alpha=0.3)
-
+# Plot the rolling data
 ax.plot(data.time[roller-1:], rolling.x, "r", label="X")
 ax.plot(data.time[roller-1:], rolling.y, "g", label="Y")
 ax.plot(data.time[roller-1:], rolling.z, "b", label="Z")
 
+# Calculate the deltas
 data['dx'] = data['x'] - data['x'].shift(-1)
 data['dy'] = data['y'] - data['y'].shift(-1)
 data['dz'] = data['z'] - data['z'].shift(-1)
-
+# Calculate the rolling deltas
 rolling['dx'] = rolling['x'] - rolling['x'].shift(-1)
 rolling['dy'] = rolling['y'] - rolling['y'].shift(-1)
 rolling['dz'] = rolling['z'] - rolling['z'].shift(-1)
 
+# Plot the deltas
 d_ax.plot(data.time, data.dx, "r--", label="X", alpha=0.3)
 d_ax.plot(data.time, data.dy, "g--", label="Y", alpha=0.3)
 d_ax.plot(data.time, data.dz, "b--", label="Z", alpha=0.3)
-
+# Plot the rolling deltas
 d_ax.plot(data.time[roller-1:], rolling.dx, "r", label="X")
 d_ax.plot(data.time[roller-1:], rolling.dy, "g", label="Y")
 d_ax.plot(data.time[roller-1:], rolling.dz, "b", label="Z")
-
 
 # Set title, ylabel, y-axis bound limits
 # Define a legend
