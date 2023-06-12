@@ -19,7 +19,8 @@ ax = fig.add_subplot(2, 1, 1)
 d_ax = fig.add_subplot(2, 1, 2)
 
 ROLLER = 5
-rolling = data.rolling(ROLLER).mean().dropna().reset_index()
+rolling = data.rolling(ROLLER).mean()
+rolling = rolling.dropna().reset_index()
 
 # Plot the data
 ax.plot(data.index, data.x, "r--", label="X", alpha=0.3)
