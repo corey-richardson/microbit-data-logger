@@ -412,33 +412,57 @@ file = fd.askopenfilename(
 data = pd.read_csv(file, header=0, delimiter=",").reset_index()
 ```
 
-**Plot Data:**
+**Create Figure:**
 
 ```py
 fig = plt.figure(figsize=(10, 10))
 ax = fig.add_subplot(2, 1, 1)
-```
-
-Plot `Time` against `x`, `y`, `z` and `strength`. Assign each property its own colour and `label`.
-```py
-plt.plot(data["Time (seconds)"], data.x, "r", label="X")
-plt.plot(data["Time (seconds)"], data.y, "g", label="Y")
-plt.plot(data["Time (seconds)"], data.z, "b", label="Z")
-```
-
-**Calculate and Plot Deltas:**
-
-```py
 d_ax = fig.add_subplot(2, 1, 2)
+```
 
+**Calculate Rolling Average:**
+
+```py
+roller = 5
+rolling = data.rolling(roller).mean().dropna()
+```
+
+**Plot Data (Raw and Rolling Values):**
+
+```py
+ax.plot(data.time, data.x, "r--", label="X", alpha=0.3)
+ax.plot(data.time, data.y, "g--", label="Y", alpha=0.3)
+ax.plot(data.time, data.z, "b--", label="Z", alpha=0.3)
+
+ax.plot(data.time[roller-1:], rolling.x, "r", label="X")
+ax.plot(data.time[roller-1:], rolling.y, "g", label="Y")
+ax.plot(data.time[roller-1:], rolling.z, "b", label="Z")
+```
+
+**Calculate Deltas:**
+
+```py
 data['dx'] = data['x'] - data['x'].shift(-1)
 data['dy'] = data['y'] - data['y'].shift(-1)
 data['dz'] = data['z'] - data['z'].shift(-1)
 
-d_ax.plot(data.index, data.dx, "r", label="X", alpha=0.5)
-d_ax.plot(data.index, data.dy, "g", label="Y", alpha=0.5)
-d_ax.plot(data.index, data.dz, "b", label="Z", alpha=0.5)
+rolling['dx'] = rolling['x'] - rolling['x'].shift(-1)
+rolling['dy'] = rolling['y'] - rolling['y'].shift(-1)
+rolling['dz'] = rolling['z'] - rolling['z'].shift(-1)
 ```
+
+**Plot Delta Data (Raw and Rolling Values):**:
+
+```py
+d_ax.plot(data.time, data.dx, "r--", label="X", alpha=0.3)
+d_ax.plot(data.time, data.dy, "g--", label="Y", alpha=0.3)
+d_ax.plot(data.time, data.dz, "b--", label="Z", alpha=0.3)
+
+d_ax.plot(data.time[roller-1:], rolling.dx, "r", label="X")
+d_ax.plot(data.time[roller-1:], rolling.dy, "g", label="Y")
+d_ax.plot(data.time[roller-1:], rolling.dz, "b", label="Z")
+```
+
 **Format the Plot:**
 
 ```py
