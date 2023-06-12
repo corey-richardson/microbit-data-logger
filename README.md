@@ -39,7 +39,13 @@ Output GIFS
 <br><br>
 
 Archery Accelerometer Recording
-- TODO
+- [final-project-and-presentation](#final-project-and-presentation)
+    - [project-selection](#project-selection)
+    - [why](#why)
+    - [what-went-well](#what-went-well)
+    - [lessons-learned](#lessons-learned)
+    - [testing-and-results](#testing-and-results)
+    - [potential-application](#potential-application)
 
 ---
 
@@ -655,3 +661,21 @@ plt.show()
 ![csv-2d](/README_assets/file_2d.gif)
 ![csv-3d](/README_assets/file_3d.gif)
 ![csv-3d-with-ref-lines](/README_assets/not_connected_3d.png)
+
+---
+
+## Final Project and Presentation
+
+### Project Selection
+
+### Why?
+
+### What Went Well
+
+### Lessons Learned
+
+### Testing and Results
+
+### Potential Application
+
+---
