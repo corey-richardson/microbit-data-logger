@@ -29,4 +29,18 @@ plt.ylabel("Magnitude")
 plt.ylim(-1500, 1500)
 plt.legend()
 
+# from scipy import signal
+
+# x_peaks, x_props = signal.find_peaks(data.x, threshold=150)
+# y_peaks, y_props = signal.find_peaks(data.x, threshold=150)
+# z_peaks, z_props = signal.find_peaks(data.x, threshold=150)
+# peaks = x_peaks, y_peaks, z_peaks
+
+# peaks = [x_peaks, y_peaks, z_peaks]
+
+# for n_peaks in peaks:
+#     for peaks in n_peaks:
+#         print(peaks)
+#         plt.axvline(peaks, color="k")
+    
 plt.show()
