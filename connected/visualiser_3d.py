@@ -40,7 +40,11 @@ def animate(i, xs, ys, zs):
     if len(xs) == LIMIT:
         ax.clear()
         ax.plot3D(xs, ys, zs)
-        
+            
+    ax.plot3D([-1500, 1500], [0, 0], [0, 0], "k--", alpha=0.5)
+    ax.plot3D([0, 0], [-1500, 1500], [0, 0], "k--", alpha=0.5)
+    ax.plot3D([0, 0], [0, 0], [-1500, 1500], "k--", alpha=0.5)
+    
     ax.set_xlim(-1500, 1500)
     ax.set_ylim(-1500, 1500)
     ax.set_zlim(-1500, 1500)
