@@ -60,19 +60,21 @@ Could also be worth creating another script that works connected to a computer a
 - [x] Is micro:bit storage non-volatile? *(Will the logs be erased when it is unplugged from power?)*
 > Data is stored on your micro:bit even when the power is disconnected. It's easy to access - no software is needed. Plug your micro:bit in to a computer, look in the MICROBIT drive and double-click the MY_DATA file to open it in a web browser.
 
-- [ ] Does the micro:bit have enough storage space to record data for the time frames I'm hoping to record?
+- [x] Does the micro:bit have enough storage space to record data for the time frames I'm hoping to record?
 > Memory: 128 KB. Flash space: 512 KB.
+
+- [x] Can Mu be installed on a work laptop?
+    > :x: Mu does not need to be installed as BBC micro:bit offers an online code editor [here](https://python.microbit.org/v/3/reference/data-logging).
+    - More specifically, is Mu *<u>allowed</u>* to be installed on a work laptop?
+
+- [x] Can I install Pip / PyPI Modules on a work laptop?
+    > :x: Pip / PyPI cannot be used to install Python packages on a work laptop. A different idea would be to supply the students with an executable version of the various plotting scripts. These `.exe` files could be created with [auto-py-to-exe](https://pypi.org/project/auto-py-to-exe/). 
+    - I believe I have all dependencies other than `PySerial` installed, would a USB transfer from an external device be possible?
 
 - [ ] Need to verify if micro:bit will work on work laptop.
     - If no, need to get USB encryption exception permissions.
 
 ![teams_EA](/README_assets/teams_EA.PNG)
-
-- [ ] Can Mu be installed on a work laptop?
-    - More specifically, is Mu *<u>allowed</u>* to be installed on a work laptop?
-
-- [ ] Can I install Pip / PyPI Modules on a work laptop?
-    - I believe I have all dependencies other than `PySerial` installed, would a USB transfer from an external device be possible?
 
 ---
 
