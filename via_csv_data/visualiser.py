@@ -59,12 +59,12 @@ ax.set_ylim(-ax_bound, ax_bound)
 d_bound = abs( rolling[["dx","dy","dz"]] ).max().max() * 1.2
 d_ax.set_ylim(-d_bound, d_bound)
 
-# Set title, ylabel, y-axis bound limits
-# Define a legend
-ax.set_title("micro:bit Data Logger")
+# Set titles and create legends
+fig.suptitle("micro:bit Data Logger")
+ax.set_title("Raw Data")
 d_ax.set_title("Deltas")
-plt.xlabel("Time (s)")
-plt.legend()
+ax.legend()
+d_ax.legend()
 
 # from scipy import signal
 
