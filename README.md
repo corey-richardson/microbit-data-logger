@@ -12,16 +12,17 @@
 
 Data Logging Visualisation via Serial Port
 - [visualing-the-microbit-data-via-usb-cable](#visualing-the-microbit-data-via-usb-cable)
-    - [connected-realtime-visualiser](#connected-realtime-visualiser)
-    - [connected-realtime-visualiser-3d](#connected-realtime-visualiser-3d)
+    - [serial-port-writer-mainpy](#serial-port-writer-mainpy)
+    - [serial-port-reader-and-realtime-visualiser](#serial-port-reader-and-realtime-visualiser)
+    - [serial-port-reader-and-3d-realtime-visualiser](#serial-port-reader-and-3d-realtime-visualiser)
 <br><br>
 
 Data Logging Visualisation via CSV Files
 - [visualing-the-microbit-with-csv-data](#visualing-the-microbit-with-csv-data)
     - [process](#process)
-    - [not-connected-mainpy](#not-connected-mainpy)
-    - [not-connected-visualiser](#not-connected-visualiser)
-    - [not-connected-visualiser-3d](#not-connected-visualiser-3d)
+    - [csv-data-writer-mainpy](#csv-data-writer-mainpy)
+    - [csv-data-visualiser](#csv-data-visualiser)
+    - [csv-data-3d-visualiser](#csv-data-3d-visualiser)
 <br><br>
 
 Output GIFS
@@ -108,7 +109,7 @@ Connect to micro:bit.
 
 ## Visualing the micro:bit Data via USB Cable
 
-### Connected main.py
+### Serial Port Writer main.py
 
 This script is flashed onto the BBC micro:bit
 
@@ -122,7 +123,7 @@ while True:
 
 The `print` command outputs to the USB serial port to be picked up by the connected laptop or computer.
 
-### Connected Realtime Visualiser
+### Serial Port Reader and Realtime Visualiser
 
 **Imports:** 
 
@@ -232,7 +233,7 @@ except KeyboardInterrupt:
     ser.close()
 ```
 
-### Connected Realtime Visualiser 3D
+### Serial Port Reader and 3D Realtime Visualiser
 
 A lot of this code is repeated from the 2D visualiser. Some exceptions include:
 - `RATE` and `LIMIT` values
@@ -324,7 +325,7 @@ except KeyboardInterrupt:
 4. Click the <kbd>Download</kbd> button. This downloads the data in `.csv` format using a period `.` as the delimiter.
 5. Run the `/not_connected/visualiser.py` script and follow any instructions that appear on screen.
 
-### Not Connected main.py
+### CSV Data Writer main.py
 
 **Imports:**
 
@@ -337,14 +338,14 @@ import log, os
 
 ```py
 # Set up columns for logging
-log.set_labels('x', 'y', 'z', 'strength')
+log.set_labels('x', 'y', 'z')
 ```
 
 **Define the `logger` function:**
 
-This is the function that records the `x`, `y`, `z` and `strength` values from the accelerometer into `"MY_DATA"`.
+This is the function that records the `x`, `y` and `z` values from the accelerometer into `"MY_DATA.HTM"`.
 ```py
-# Record the x, y, z and Pythagorean combined value 
+# Record the x, y, z values
 def logger():
     log.add({
         'x': accelerometer.get_x(),
@@ -361,7 +362,6 @@ The script begins by initialising `logging` to be `False`. Then, every 50ms* it 
 
 If <kbd>A</kbd> has been pressed, `logging` is set to `True`. <br>
 If <kbd>B</kbd> has been pressed, `logging` is set to `False`. <br>
-If <kbd>A</kbd> and <kbd>B</kbd> are pressed, the `clear_log` function is called to delete the log file, `"MY_DATA"`.
 
 If `logging` is set to `True`, the `logger()` function is called. Since this call is within the outer `while True` loop, this function can be called every ~50ms*.
 > *50ms delay + Loop Runtime
@@ -373,7 +373,6 @@ logging = False
 while True:
     sleep(50) # milliseconds
     # On "A" button pressed...
-    # Clear the log, set logging to True and update displayed icon
     if button_a.is_pressed():
         logging = True
         display.show(Image.YES)
@@ -390,7 +389,7 @@ while True:
         logger()
 ```
 
-### Not Connected Visualiser
+### CSV Data Visualiser
 
 **Imports:**
 
@@ -438,7 +437,7 @@ for peak in peaks:
     plt.axvline(peak, color="k")
 ```
 
-### Not Connected Visualiser 3D
+### CSV Data 3D Visualiser
 
 **Imports:**
 
