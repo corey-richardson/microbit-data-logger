@@ -12,13 +12,18 @@ file = fd.askopenfilename(
 # Read the selected data into a dataframe
 # .reset_index() creates an index column
 data = pd.read_csv(file, header=0).reset_index()
-data.time = data["Time (seconds)"] - min(data["Time (seconds)"])
+
+data["time"] = data["Time (seconds)"] - min(data["Time (seconds)"])
+
 # Create the figure to plot to
 fig = plt.figure(figsize=(10, 10))
 ax = fig.add_subplot(2, 1, 1)
 d_ax = fig.add_subplot(2, 1, 2)
 
-ROLLER = 5
+ax.axhline(0, color="k")
+d_ax.axhline(0, color="k")
+
+ROLLER = 20
 rolling = data.rolling(ROLLER).mean()
 rolling = rolling.dropna().reset_index()
 
@@ -26,24 +31,23 @@ rolling = rolling.dropna().reset_index()
 ax.plot(data.index, data.x, "r--", label="X", alpha=0.3)
 ax.plot(data.index, data.y, "g--", label="Y", alpha=0.3)
 ax.plot(data.index, data.z, "b--", label="Z", alpha=0.3)
-# Plot rolling average data 
+
 ax.plot(rolling.index + ROLLER/2, rolling.x, "r", label="X")
 ax.plot(rolling.index + ROLLER/2, rolling.y, "g", label="Y")
 ax.plot(rolling.index + ROLLER/2, rolling.z, "b", label="Z")
 
-# Calculate deltas
 data['dx'] = data['x'] - data['x'].shift(-1)
 data['dy'] = data['y'] - data['y'].shift(-1)
 data['dz'] = data['z'] - data['z'].shift(-1)
+
 rolling['dx'] = rolling['x'] - rolling['x'].shift(-1)
 rolling['dy'] = rolling['y'] - rolling['y'].shift(-1)
 rolling['dz'] = rolling['z'] - rolling['z'].shift(-1)
 
-# Plot deltas
 d_ax.plot(data.index, data.dx, "r--", label="X", alpha=0.3)
 d_ax.plot(data.index, data.dy, "g--", label="Y", alpha=0.3)
 d_ax.plot(data.index, data.dz, "b--", label="Z", alpha=0.3)
-# Plot rolling deltas shifted to align with the 'data' values
+
 d_ax.plot(rolling.index + ROLLER/2, rolling.dx, "r", label="X")
 d_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
 d_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
@@ -55,7 +59,7 @@ ax.set_ylim(-ax_bound, ax_bound)
 d_bound = abs( rolling[["dx","dy","dz"]] ).max().max() * 1.2
 d_ax.set_ylim(-d_bound, d_bound)
 
-# Set title, ylabel
+# Set title, ylabel, y-axis bound limits
 # Define a legend
 ax.set_title("micro:bit Data Logger")
 d_ax.set_title("Deltas")
