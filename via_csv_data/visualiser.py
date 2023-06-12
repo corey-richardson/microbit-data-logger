@@ -48,13 +48,18 @@ d_ax.plot(rolling.index + ROLLER/2, rolling.dx, "r", label="X")
 d_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
 d_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
 
-# Set title, ylabel, y-axis bound limits
+# Find max x, y, z magnitude for rolling data, then +20% as leeway
+ax_bound = abs( rolling[["x","y","z"]] ).max().max() * 1.2
+ax.set_ylim(-ax_bound, ax_bound)
+# Find max x, y, z magnitude for rolling deltas, then +20% as leeway
+d_bound = abs( rolling[["dx","dy","dz"]] ).max().max() * 1.2
+d_ax.set_ylim(-d_bound, d_bound)
+
+# Set title, ylabel
 # Define a legend
 ax.set_title("micro:bit Data Logger")
 d_ax.set_title("Deltas")
 plt.xlabel("Time (s)")
-ax.set_ylim(-1500, 1500)
-d_ax.set_ylim(-500, 500)
 plt.legend()
 
 # from scipy import signal

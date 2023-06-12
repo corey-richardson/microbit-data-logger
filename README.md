@@ -467,12 +467,20 @@ d_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
 
 **Format the Plot:**
 
+Find the highest magnitude values (positive or negative) for the `x`, `y` and `z` as well as the `dx`, `dy` and `dz` columns of `rolling`. Use these +20% as the y-limits for the axis. The added percentage ensures the data is not crowded with the axis borders.
 ```py
+# Find max x, y, z magnitude for rolling data, then +20% as leeway
+ax_bound = abs( rolling[["x","y","z"]] ).max().max() * 1.2
+ax.set_ylim(-ax_bound, ax_bound)
+# Find max x, y, z magnitude for rolling deltas, then +20% as leeway
+d_bound = abs( rolling[["dx","dy","dz"]] ).max().max() * 1.2
+d_ax.set_ylim(-d_bound, d_bound)
+
+# Set title, ylabel
+# Define a legend
 ax.set_title("micro:bit Data Logger")
 d_ax.set_title("Deltas")
 plt.xlabel("Time (s)")
-ax.set_ylim(-1500, 1500)
-d_ax.set_ylim(-500, 500)
 plt.legend()
 ```
 
