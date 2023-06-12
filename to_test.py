@@ -15,8 +15,8 @@ ser.close()
 ser.open()
 
 fig = plt.figure()
-ax = fig.add_subplot(2, 1, 1)
-d_ax = fig.add_subplot(2, 1, 2)
+ax = fig.add_subplot(1, 2, 1)
+d_ax = fig.add_subplot(1, 2, 2)
 
 xs, ys, zs = [0]*LIMIT, [0]*LIMIT, [0]*LIMIT
 d_xs, d_ys, d_zs = [0]*(LIMIT-1), [0]*(LIMIT-1), [0]*(LIMIT-1)
@@ -40,7 +40,6 @@ def animate(i, xs, ys, zs, d_xs, d_ys, d_zs):
     d_xs = d_xs[(-LIMIT)-1:]
     d_ys = d_ys[(-LIMIT)-1:]
     d_zs = d_zs[(-LIMIT)-1:]
-    
     
     if len(xs) == LIMIT:
         ax.clear()
