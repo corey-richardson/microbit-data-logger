@@ -23,14 +23,14 @@ d_ax = fig.add_subplot(2, 1, 2)
 ax.axhline(0, color="k")
 d_ax.axhline(0, color="k")
 
-ROLLER = 20
+ROLLER = 4
 rolling = data.rolling(ROLLER).mean()
 rolling = rolling.dropna().reset_index()
 
 # Plot the data
-ax.plot(data.index, data.x, "r--", label="X", alpha=0.3)
-ax.plot(data.index, data.y, "g--", label="Y", alpha=0.3)
-ax.plot(data.index, data.z, "b--", label="Z", alpha=0.3)
+ax.plot(data.index, data.x, "r--", label="X", alpha=0.2)
+ax.plot(data.index, data.y, "g--", label="Y", alpha=0.2)
+ax.plot(data.index, data.z, "b--", label="Z", alpha=0.2)
 
 ax.plot(rolling.index + ROLLER/2, rolling.x, "r", label="X")
 ax.plot(rolling.index + ROLLER/2, rolling.y, "g", label="Y")
@@ -44,19 +44,19 @@ rolling['dx'] = rolling['x'] - rolling['x'].shift(-1)
 rolling['dy'] = rolling['y'] - rolling['y'].shift(-1)
 rolling['dz'] = rolling['z'] - rolling['z'].shift(-1)
 
-d_ax.plot(data.index, data.dx, "r--", label="X", alpha=0.3)
-d_ax.plot(data.index, data.dy, "g--", label="Y", alpha=0.3)
-d_ax.plot(data.index, data.dz, "b--", label="Z", alpha=0.3)
+d_ax.plot(data.index, data.dx, "r--", label="X", alpha=0.2)
+d_ax.plot(data.index, data.dy, "g--", label="Y", alpha=0.2)
+d_ax.plot(data.index, data.dz, "b--", label="Z", alpha=0.2)
 
 d_ax.plot(rolling.index + ROLLER/2, rolling.dx, "r", label="X")
 d_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
 d_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
 
 # Find max x, y, z magnitude for rolling data, then +20% as leeway
-ax_bound = abs( rolling[["x","y","z"]] ).max().max() * 1.2
+ax_bound = abs( rolling[["x","y","z"]] ).max().max() * 1.5
 ax.set_ylim(-ax_bound, ax_bound)
 # Find max x, y, z magnitude for rolling deltas, then +20% as leeway
-d_bound = abs( rolling[["dx","dy","dz"]] ).max().max() * 1.2
+d_bound = abs( rolling[["dx","dy","dz"]] ).max().max() * 1.5
 d_ax.set_ylim(-d_bound, d_bound)
 
 # Set titles and create legends
