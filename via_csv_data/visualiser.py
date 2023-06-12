@@ -14,17 +14,27 @@ file = fd.askopenfilename(
 data = pd.read_csv(file, header=0).reset_index()
 
 # Create the figure to plot to
-fig = plt.figure()
-ax = fig.add_subplot(1, 1, 1)
+fig = plt.figure(figsize=(10, 10))
+ax = fig.add_subplot(2, 1, 1)
+d_ax = fig.add_subplot(2, 1, 2)
 
 # Plot the data
 ax.plot(data.index, data.x, "r", label="X")
 ax.plot(data.index, data.y, "g", label="Y")
 ax.plot(data.index, data.z, "b", label="Z")
 
+data['dx'] = data['x'] - data['x'].shift(-1)
+data['dy'] = data['y'] - data['y'].shift(-1)
+data['dz'] = data['z'] - data['z'].shift(-1)
+
+d_ax.plot(data.index, data.dx, "r", label="X", alpha=0.5)
+d_ax.plot(data.index, data.dy, "g", label="Y", alpha=0.5)
+d_ax.plot(data.index, data.dz, "b", label="Z", alpha=0.5)
+
 # Set title, ylabel, y-axis bound limits
 # Define a legend
-plt.title("micro:bit Data Logger")
+ax.set_title("micro:bit Data Logger")
+d_ax.set_title("Deltas")
 plt.ylabel("Magnitude")
 plt.ylim(-1500, 1500)
 plt.legend()

@@ -414,6 +414,11 @@ data = pd.read_csv(file, header=0, delimiter=",").reset_index()
 
 **Plot Data:**
 
+```py
+fig = plt.figure(figsize=(10, 10))
+ax = fig.add_subplot(2, 1, 1)
+```
+
 Plot `Time` against `x`, `y`, `z` and `strength`. Assign each property its own colour and `label`.
 ```py
 plt.plot(data["Time (seconds)"], data.x, "r", label="X")
@@ -421,6 +426,19 @@ plt.plot(data["Time (seconds)"], data.y, "g", label="Y")
 plt.plot(data["Time (seconds)"], data.z, "b", label="Z")
 ```
 
+**Calculate and Plot Deltas:**
+
+```py
+d_ax = fig.add_subplot(2, 1, 2)
+
+data['dx'] = data['x'] - data['x'].shift(-1)
+data['dy'] = data['y'] - data['y'].shift(-1)
+data['dz'] = data['z'] - data['z'].shift(-1)
+
+d_ax.plot(data.index, data.dx, "r", label="X", alpha=0.5)
+d_ax.plot(data.index, data.dy, "g", label="Y", alpha=0.5)
+d_ax.plot(data.index, data.dz, "b", label="Z", alpha=0.5)
+```
 **Format the Plot:**
 
 ```py
