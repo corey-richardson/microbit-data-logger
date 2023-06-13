@@ -1,7 +1,7 @@
 from matplotlib import pyplot as plt
 from matplotlib import animation
+from numpy import diff
 import serial
-from numpy import diff, arange
 
 # Windows Device Manager > Ports (COM & LPT) > "mbed Serial Port"
 PORT = 'COM3'

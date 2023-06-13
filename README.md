@@ -119,7 +119,7 @@ This script is flashed onto the BBC micro:bit
 from microbit import *
 
 while True:
-    sleep(50) # milliseconds
+    sleep(100) # milliseconds
     print(accelerometer.get_values())
 ```
 
@@ -132,6 +132,7 @@ The `print` command outputs to the USB serial port to be picked up by the connec
 ```py
 from matplotlib import pyplot as plt
 from matplotlib import animation
+from numpy import diff
 import serial
 ```
 
@@ -151,8 +152,8 @@ PORT = 'COM3'
 BAUD_RATE = 115_200 # ENSURE THIS MATCHES VALUE IN DEVICE MANAGER
 STOP = 1
 
-LIMIT = 75
-RATE = 5 # ms
+LIMIT = 300
+RATE = 50 # ms
 ```
 
 **Connect to Serial Port:**
@@ -184,7 +185,9 @@ Create the function `animate` that will get called as an argument in `FuncAnimat
 
 Read the line from the serial port connection. This is returned as a `byte` object so needs to be decoded with `.decode("utf-8")`. The parenthesis also need to be removed with `.strip()`. Then, cast the values to ints.
 
-Create a list with length `LIMIT`. Append the current values to `xs`, `ys` and `zs`. Then, slice the list to only include the `n` most recent values, where `n` is `LIMIT`.
+Create a list `idx` with length `LIMIT`. Append the current values to `xs`, `ys` and `zs`. Then, slice the list to only include the `n` most recent values, where `n` is `LIMIT`.
+
+Calculate the deltas using `Numpy`'s `diff()` function. Then, plot the data and the deltas.
 
 Once the lists have enough values in them, begin plotting.
 
@@ -205,16 +208,30 @@ def animate(i, xs, ys, zs):
     xs = xs[-LIMIT:]
     ys = ys[-LIMIT:]
     zs = zs[-LIMIT:]
+
+    d_xs = diff(xs)
+    d_ys = diff(ys)
+    d_zs = diff(zs)
     
     if len(xs) == LIMIT:
         ax.clear()
-        ax.plot(idx, xs, label="X")
-        ax.plot(idx, ys, label="Y")
-        ax.plot(idx, zs, label="Z")
-        
+        d_ax.clear()
+
+        ax.plot(idx, xs, color="r", label="X")
+        ax.plot(idx, ys, color="g", label="Y")
+        ax.plot(idx, zs, color="b", label="Z")
+
+        d_ax.plot(d_idx, d_xs, color="r")
+        d_ax.plot(d_idx, d_ys, color="g")
+        d_ax.plot(d_idx, d_zs, color="b")
+        d_ax.axhline(0, color="k")
+
     ax.set_ylim(-1500, 1500)
-    plt.title("micro:bit Data Logger")
-    plt.ylabel("Magnitude")
+    d_ax.set_ylim(-1500, 1500)
+
+    ax.legend()
+
+    fig.suptitle("micro:bit Data Logger")
 ```
 
 **Create and Plot Animation:**
@@ -249,6 +266,7 @@ A lot of this code is repeated from the 2D visualiser. Some exceptions include:
 ```py
 from matplotlib import pyplot as plt
 from matplotlib import animation
+from numpy import diff
 import serial
 
 # Windows Device Manager > Ports (COM & LPT) > "mbed Serial Port"
@@ -256,8 +274,9 @@ PORT = 'COM3'
 BAUD_RATE = 115_200 # ENSURE THIS MATCHES VALUE IN DEVICE MANAGER
 STOP = 1
 
-LIMIT = 50
-RATE = 50 # ms
+LIMIT = 25
+RATE = 5 # ms
+
 
 ser = serial.Serial(PORT, BAUD_RATE, timeout=STOP)
 ser.close()
@@ -285,17 +304,20 @@ def animate(i, xs, ys, zs):
     xs = xs[-LIMIT:]
     ys = ys[-LIMIT:]
     zs = zs[-LIMIT:]
-    
+
+    d_xs = diff(xs)
+    d_ys = diff(ys)
+    d_zs = diff(zs)
+
     if len(xs) == LIMIT:
         ax.clear()
-        ax.plot3D(xs, ys, zs)
+        ax.plot3D(xs, ys, zs, label="State")
+        ax.plot3D(d_xs, d_ys, d_zs, label="Deltas")
         
     ax.set_xlim(-1500, 1500)
     ax.set_ylim(-1500, 1500)
     ax.set_zlim(-1500, 1500)
-    ax.set_xlabel("x")
-    ax.set_ylabel("y")
-    ax.set_zlabel("z")
+    ax.legend()
 
     ax.plot3D([-1500, 1500], [0, 0], [0, 0], "k--", alpha=0.5)
     ax.plot3D([0, 0], [-1500, 1500], [0, 0], "k--", alpha=0.5)
