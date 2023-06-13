@@ -426,6 +426,7 @@ while True:
 from tkinter import filedialog as fd
 import pandas as pd
 from matplotlib import pyplot as plt
+from matplotlib.gridspec import GridSpec
 from scipy import signal
 ```
 
@@ -436,22 +437,37 @@ Opens a File Explorer window allowing the user to select the `.csv` file to plot
 file = fd.askopenfilename(
     filetypes=[("CSV files", "*.csv")],title="Set input .csv file" )
 
-data = pd.read_csv(file, header=0, delimiter=",").reset_index()
+data = pd.read_csv(file, header=0).reset_index()
 ```
 
 **Create Figure:**
 
 ```py
 fig = plt.figure(figsize=(10, 10))
-ax = fig.add_subplot(2, 1, 1)
-d_ax = fig.add_subplot(2, 1, 2)
+gs = GridSpec(6, 6, figure=fig)
+
+ax = fig.add_subplot(gs[0:3, 0:3])
+d_ax = fig.add_subplot(gs[0:3, 3:6])
+dx_ax = fig.add_subplot(gs[3:6, 0:2])
+dy_ax = fig.add_subplot(gs[3:6, 2:4])
+dz_ax = fig.add_subplot(gs[3:6, 4:6])
+
+fig.tight_layout(pad=2.5)
+
+ax.axhline(0, color="k")
+d_ax.axhline(0, color="k")
+dx_ax.axhline(0, color="k")
+dy_ax.axhline(0, color="k")
+dz_ax.axhline(0, color="k")
 ```
 
 **Calculate Rolling Average:**
 
 ```py
-roller = 5
-rolling = data.rolling(roller).mean().dropna()
+ROLLER = 4
+ALPHA = 0.3
+rolling = data.rolling(ROLLER).mean()
+rolling = rolling.dropna().reset_index()
 ```
 
 **Plot Data (Raw and Rolling Values):**
@@ -474,6 +490,7 @@ ax.plot(rolling.index + ROLLER/2, rolling.z, "b", label="Z")
 data['dx'] = data['x'] - data['x'].shift(-1)
 data['dy'] = data['y'] - data['y'].shift(-1)
 data['dz'] = data['z'] - data['z'].shift(-1)
+
 rolling['dx'] = rolling['x'] - rolling['x'].shift(-1)
 rolling['dy'] = rolling['y'] - rolling['y'].shift(-1)
 rolling['dz'] = rolling['z'] - rolling['z'].shift(-1)
@@ -492,32 +509,62 @@ d_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
 d_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
 ```
 
+**Plot Deltas Seperately:**
+
+```py
+dx_ax.plot(data.index, data.dx, "r--", label="X", alpha=ALPHA)
+dy_ax.plot(data.index, data.dy, "g--", label="Y", alpha=ALPHA)
+dz_ax.plot(data.index, data.dz, "b--", label="Z", alpha=ALPHA)
+
+dx_ax.plot(rolling.index + ROLLER/2, rolling.dx, "r", label="X")
+dy_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
+dz_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
+```
+
 **Format the Plot:**
 
 Find the highest magnitude values (positive or negative) for the `x`, `y` and `z` as well as the `dx`, `dy` and `dz` columns of `rolling`. Use these +20% as the y-limits for the axis. The added percentage ensures the data is not crowded with the axis borders.
 ```py
-# Find max x, y, z magnitude for rolling data, then +20% as leeway
-ax_bound = abs( rolling[["x","y","z"]] ).max().max() * 1.2
+# Find max x, y, z magnitude for rolling data, then +50% as leeway
+ax_bound = abs( rolling[["x","y","z"]] ).max().max() * 1.5
 ax.set_ylim(-ax_bound, ax_bound)
-# Find max x, y, z magnitude for rolling deltas, then +20% as leeway
-d_bound = abs( rolling[["dx","dy","dz"]] ).max().max() * 1.2
+# Find max x, y, z magnitude for rolling deltas, then +50% as leeway
+d_bound = abs( rolling[["dx","dy","dz"]] ).max().max() * 1.5
 d_ax.set_ylim(-d_bound, d_bound)
 
-# Set title, ylabel
-# Define a legend
-ax.set_title("micro:bit Data Logger")
+# Set titles and create legends
+fig.suptitle("micro:bit Data Logger")
+ax.set_title("Raw Data")
 d_ax.set_title("Deltas")
-plt.xlabel("Time (s)")
-plt.legend()
+dx_ax.set_title("x")
+dy_ax.set_title("y")
+dz_ax.set_title("z")
+
+dx_ax.set_ylim(-d_bound, d_bound)
+dy_ax.set_ylim(-d_bound, d_bound)
+dz_ax.set_ylim(-d_bound, d_bound)
+
+ax.legend()
+d_ax.legend()
+
 ```
 
 **Plot Peaks:**
 
 Plot vertical lines at signal peaks; sudden movements.
 ```py
-peaks, props = signal.find_peaks(data.strength, threshold=150)
-for peak in peaks:
-    plt.axvline(peak, color="k")
+THRESHOLD = 200
+x_peaks, x_props = signal.find_peaks(rolling.dx, threshold=THRESHOLD)
+y_peaks, y_props = signal.find_peaks(rolling.dy, threshold=THRESHOLD)
+z_peaks, z_props = signal.find_peaks(rolling.dz, threshold=THRESHOLD)
+
+def plot_peaks(axis, peaks):
+    for peak in peaks:
+        axis.axvline(peak, color="k", alpha=0.5)
+
+plot_peaks(dx_ax, x_peaks)
+plot_peaks(dy_ax, y_peaks)
+plot_peaks(dz_ax, z_peaks)
 ```
 
 ### CSV Data 3D Visualiser

@@ -6,6 +6,8 @@ import pandas as pd
 # matplotlib.pyplot is used to create graphical visualisations of the data
 from matplotlib import pyplot as plt
 from matplotlib.gridspec import GridSpec
+# scipy.signal is used to show where peaks are in the data
+from scipy import signal
 
 # Open file explorer window for user to select CSV Data
 file = fd.askopenfilename(
@@ -33,14 +35,16 @@ dx_ax.axhline(0, color="k")
 dy_ax.axhline(0, color="k")
 dz_ax.axhline(0, color="k")
 
+
 ROLLER = 4
+ALPHA = 0.3
 rolling = data.rolling(ROLLER).mean()
 rolling = rolling.dropna().reset_index()
 
 # Plot the data
-ax.plot(data.index, data.x, "r--", label="X", alpha=0.2)
-ax.plot(data.index, data.y, "g--", label="Y", alpha=0.2)
-ax.plot(data.index, data.z, "b--", label="Z", alpha=0.2)
+ax.plot(data.index, data.x, "r--", label="X", alpha=ALPHA)
+ax.plot(data.index, data.y, "g--", label="Y", alpha=ALPHA)
+ax.plot(data.index, data.z, "b--", label="Z", alpha=ALPHA)
 
 ax.plot(rolling.index + ROLLER/2, rolling.x, "r", label="X")
 ax.plot(rolling.index + ROLLER/2, rolling.y, "g", label="Y")
@@ -54,17 +58,17 @@ rolling['dx'] = rolling['x'] - rolling['x'].shift(-1)
 rolling['dy'] = rolling['y'] - rolling['y'].shift(-1)
 rolling['dz'] = rolling['z'] - rolling['z'].shift(-1)
 
-d_ax.plot(data.index, data.dx, "r--", label="X", alpha=0.2)
-d_ax.plot(data.index, data.dy, "g--", label="Y", alpha=0.2)
-d_ax.plot(data.index, data.dz, "b--", label="Z", alpha=0.2)
+d_ax.plot(data.index, data.dx, "r--", label="X", alpha=ALPHA)
+d_ax.plot(data.index, data.dy, "g--", label="Y", alpha=ALPHA)
+d_ax.plot(data.index, data.dz, "b--", label="Z", alpha=ALPHA)
 
 d_ax.plot(rolling.index + ROLLER/2, rolling.dx, "r", label="X")
 d_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
 d_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
 
-dx_ax.plot(data.index, data.dx, "r--", label="X", alpha=0.3)
-dy_ax.plot(data.index, data.dy, "g--", label="Y", alpha=0.3)
-dz_ax.plot(data.index, data.dz, "b--", label="Z", alpha=0.3)
+dx_ax.plot(data.index, data.dx, "r--", label="X", alpha=ALPHA)
+dy_ax.plot(data.index, data.dy, "g--", label="Y", alpha=ALPHA)
+dz_ax.plot(data.index, data.dz, "b--", label="Z", alpha=ALPHA)
 
 dx_ax.plot(rolling.index + ROLLER/2, rolling.dx, "r", label="X")
 dy_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
@@ -92,18 +96,17 @@ dz_ax.set_ylim(-d_bound, d_bound)
 ax.legend()
 d_ax.legend()
 
-# from scipy import signal
+THRESHOLD = 200
+x_peaks, x_props = signal.find_peaks(rolling.dx, threshold=THRESHOLD)
+y_peaks, y_props = signal.find_peaks(rolling.dy, threshold=THRESHOLD)
+z_peaks, z_props = signal.find_peaks(rolling.dz, threshold=THRESHOLD)
 
-# x_peaks, x_props = signal.find_peaks(data.x, threshold=150)
-# y_peaks, y_props = signal.find_peaks(data.x, threshold=150)
-# z_peaks, z_props = signal.find_peaks(data.x, threshold=150)
-# peaks = x_peaks, y_peaks, z_peaks
+def plot_peaks(axis, peaks):
+    for peak in peaks:
+        axis.axvline(peak, color="k", alpha=0.5)
 
-# peaks = [x_peaks, y_peaks, z_peaks]
+plot_peaks(dx_ax, x_peaks)
+plot_peaks(dy_ax, y_peaks)
+plot_peaks(dz_ax, z_peaks)
 
-# for n_peaks in peaks:
-#     for peaks in n_peaks:
-#         print(peaks)
-#         plt.axvline(peaks, color="k")
-    
 plt.show()
