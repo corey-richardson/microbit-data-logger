@@ -277,7 +277,6 @@ STOP = 1
 LIMIT = 25
 RATE = 5 # ms
 
-
 ser = serial.Serial(PORT, BAUD_RATE, timeout=STOP)
 ser.close()
 ser.open()
@@ -286,7 +285,6 @@ fig = plt.figure()
 ax = plt.axes(projection='3d')
 
 xs, ys, zs = [0]*LIMIT, [0]*LIMIT, [0]*LIMIT
-
 
 def animate(i, xs, ys, zs):
     
@@ -533,11 +531,6 @@ file = fd.askopenfilename(
     filetypes=[("CSV files", "*.csv")],title="Set input .csv file" )
 
 data = pd.read_csv(file, header=0, delimiter=",")
-```
-
-This line assigns in parallel the columns from `data` to their own variables. It is not entirely necessary but does *slightly* improve readability.
-```py
-x, y, z = data.x, data.y, data.z
 ```
 
 **Create 3D Plot:**
