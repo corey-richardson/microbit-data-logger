@@ -36,6 +36,7 @@ Final Project and Presentation - Archery Data Logger
 - [final-project-and-presentation](#final-project-and-presentation)
     - [project-selection](#project-selection)
     - [why](#why)
+    - [plan](#plan)
     - [what-went-well](#what-went-well)
     - [lessons-learned](#lessons-learned)
     - [testing-and-results](#testing-and-results)
@@ -698,7 +699,30 @@ An interesting scenario to record could be archery. This would show how movement
 
 ### Project Selection
 
+Archery Stability Tracker: Measure the vibrations of a bow as it is fired. This could also be used to visualise different stages of the shot process; nocking, setting, aiming, loosing. 
+
+This could also be used to compare other variables:
+- Bowstyle: Recurve Vs. Compound
+- Vibration Dampening: With and without 'Limb Savers'
+- Distance: Do I aim / settle for longer at higher distances?
+
+### Plan
+
+- Write a script for the micro:bit to record accelerometer data in `.csv` format every `n` milliseconds.
+    - When Button "A" is pressed, start recording; would it be a good idea to include a 2-3 second delay to avoid recording 'interference'? If so, will need a visual indication and / or countdown.
+    - When Button "B" is pressed, stop recording.
+- Carry out signal pre-processing to mitigate random noise. This could be carried out with methods such as convolving (rolling averages) or even Kalman filtering.
+- Use Python's `matplotlib` module to visualise the movement in various formats: 2D and 3D lineplot.
+- Use Python's `matplotlib` module to visualise the rate of movement (deltas between datapoints).
+- Focus in on 'spikes' within the data, likely to be the moment of loosing.
+> DEFINITION - Loosing: The act of shooting an arrow from a bow.
+
 ### Why?
+
+I will be using `.csv` data in this project as opposed to serial port transfer between the micro:bit and a computer as this would allow the micro:bit to be a small and standalone unit; a long cable connecting two devices would pose a safety hazard if the wire got caught in the cam system of my compound bow.
+> DEFINITION - Cam System: Pulley/s on the limbs of the bow that 'hold' the draw weight at full draw. This allows you to hold a heavy draw weight as though it was a light draw weight meaning you can stay at a settled full draw for an extended time period. Or, a rotating piece of mechanical linkage that converts rotary motion into linear motion.
+
+Real-time logging could be achieved using the `radio` functionality of *two* micro:bits; one on the bow to record and transmit the data and on connected to a computer / laptop to receive and plot. This is demonstrated in [this](https://microbit.org/projects/make-it-code-it/python-wireless-data-logger/) project.
 
 ### What Went Well
 
