@@ -587,13 +587,26 @@ x_peaks, x_props = signal.find_peaks(rolling.dx, threshold=THRESHOLD)
 y_peaks, y_props = signal.find_peaks(rolling.dy, threshold=THRESHOLD)
 z_peaks, z_props = signal.find_peaks(rolling.dz, threshold=THRESHOLD)
 
-def plot_peaks(axis, peaks):
-    axis.axvline(peaks[0] - 20, color="k", alpha=0.7)
-    axis.axvline(peaks[0] + 20, color="k", alpha=0.7)
+# This function plots vertical lines on each of the seperated delta plots to 
+# indicate which section of the data is being cropped into on 
+# the proceeding plot.
+# It then crops into these areas
+# If no peaks are found it will delete that subplot.
+def plot_peaks(delta_axis, peak_axis, peaks):
+    try:
+        delta_axis.axvline(peaks[0] - 20, color="k", alpha=0.7)
+        delta_axis.axvline(peaks[0] + 20, color="k", alpha=0.7)
+        # Set the x and y bounds for each of the peak plots
+        peak_axis.set_xlim(peaks[len(peaks)//2] - 20, peaks[len(peaks)//2] + 20)
+        peak_axis.set_ylim(-peak_bound, peak_bound)
+    except IndexError:
+        print("No peaks found...")
+        print(peaks)
+        fig.delaxes(peak_axis)
 
-plot_peaks(dx_ax, x_peaks)
-plot_peaks(dy_ax, y_peaks)
-plot_peaks(dz_ax, z_peaks)
+plot_peaks(dx_ax, xpeak_ax, x_peaks)
+plot_peaks(dy_ax, ypeak_ax, y_peaks)
+plot_peaks(dz_ax, zpeak_ax, z_peaks)
 ```
 
 **Crop into peaks:**
@@ -672,6 +685,8 @@ plt.show()
 ![csv-2d](/README_assets/file_2d.gif)
 ![csv-2d-w-deltas](/README_assets/raw_and_deltas.png)
 ![csv_xyz-seperated](/README_assets/xyz_seperated.png)
+![missing_peaks](/README_assets/missing_peaks.png)
+![recurve-peaks](/README_assets/recurve_peaks.png)
 ![csv-3d](/README_assets/file_3d.gif)
 ![csv-3d-with-ref-lines](/README_assets/not_connected_3d.png)
 

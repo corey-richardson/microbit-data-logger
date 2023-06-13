@@ -141,23 +141,23 @@ z_peaks, z_props = signal.find_peaks(rolling.dz, threshold=THRESHOLD)
 # This function plots vertical lines on each of the seperated delta plots to 
 # indicate which section of the data is being cropped into on 
 # the proceeding plot.
-def plot_peaks(axis, peaks):
-    axis.axvline(peaks[0] - 20, color="k", alpha=0.7)
-    axis.axvline(peaks[0] + 20, color="k", alpha=0.7)
-# Call function for each axis 
-plot_peaks(dx_ax, x_peaks)
-plot_peaks(dy_ax, y_peaks)
-plot_peaks(dz_ax, z_peaks)
+# It then crops into these areas
+# If no peaks are found it will delete that subplot.
+def plot_peaks(delta_axis, peak_axis, peaks):
+    try:
+        delta_axis.axvline(peaks[0] - 20, color="k", alpha=0.7)
+        delta_axis.axvline(peaks[0] + 20, color="k", alpha=0.7)
+        # Set the x and y bounds for each of the peak plots
+        peak_axis.set_xlim(peaks[len(peaks)//2] - 20, peaks[len(peaks)//2] + 20)
+        peak_axis.set_ylim(-peak_bound, peak_bound)
+    except IndexError:
+        print("No peaks found...")
+        print(peaks)
+        fig.delaxes(peak_axis)
 
-# Set the x and y bounds for each of the peak plots
-xpeak_ax.set_xlim(x_peaks[len(x_peaks)//2] - 20, x_peaks[len(x_peaks)//2] + 20)
-xpeak_ax.set_ylim(-peak_bound, peak_bound)
-
-ypeak_ax.set_xlim(y_peaks[len(y_peaks)//2] - 20, y_peaks[len(y_peaks)//2] + 20)
-ypeak_ax.set_ylim(-peak_bound, peak_bound)
-
-zpeak_ax.set_xlim(z_peaks[len(z_peaks)//2] - 20, z_peaks[len(z_peaks)//2] + 20)
-zpeak_ax.set_ylim(-peak_bound, peak_bound)
+plot_peaks(dx_ax, xpeak_ax, x_peaks)
+plot_peaks(dy_ax, ypeak_ax, y_peaks)
+plot_peaks(dz_ax, zpeak_ax, z_peaks)
 
 # Finally, display the figure
 plt.show()
