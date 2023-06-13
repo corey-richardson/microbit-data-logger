@@ -5,6 +5,7 @@ from tkinter import filedialog as fd
 import pandas as pd
 # matplotlib.pyplot is used to create graphical visualisations of the data
 from matplotlib import pyplot as plt
+from matplotlib.gridspec import GridSpec
 
 # Open file explorer window for user to select CSV Data
 file = fd.askopenfilename(
@@ -17,11 +18,20 @@ data["time"] = data["Time (seconds)"] - min(data["Time (seconds)"])
 
 # Create the figure to plot to
 fig = plt.figure(figsize=(10, 10))
-ax = fig.add_subplot(2, 1, 1)
-d_ax = fig.add_subplot(2, 1, 2)
+gs = GridSpec(6, 6, figure=fig)
+# Create subplots, organised using GridSpec
+ax = fig.add_subplot(gs[0:3, 0:3])
+d_ax = fig.add_subplot(gs[0:3, 3:6])
+dx_ax = fig.add_subplot(gs[3:6, 0:2])
+dy_ax = fig.add_subplot(gs[3:6, 2:4])
+dz_ax = fig.add_subplot(gs[3:6, 4:6])
+fig.tight_layout(pad=2.5)
 
 ax.axhline(0, color="k")
 d_ax.axhline(0, color="k")
+dx_ax.axhline(0, color="k")
+dy_ax.axhline(0, color="k")
+dz_ax.axhline(0, color="k")
 
 ROLLER = 4
 rolling = data.rolling(ROLLER).mean()
@@ -52,6 +62,14 @@ d_ax.plot(rolling.index + ROLLER/2, rolling.dx, "r", label="X")
 d_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
 d_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
 
+dx_ax.plot(data.index, data.dx, "r--", label="X", alpha=0.3)
+dy_ax.plot(data.index, data.dy, "g--", label="Y", alpha=0.3)
+dz_ax.plot(data.index, data.dz, "b--", label="Z", alpha=0.3)
+
+dx_ax.plot(rolling.index + ROLLER/2, rolling.dx, "r", label="X")
+dy_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
+dz_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
+
 # Find max x, y, z magnitude for rolling data, then +20% as leeway
 ax_bound = abs( rolling[["x","y","z"]] ).max().max() * 1.5
 ax.set_ylim(-ax_bound, ax_bound)
@@ -63,6 +81,14 @@ d_ax.set_ylim(-d_bound, d_bound)
 fig.suptitle("micro:bit Data Logger")
 ax.set_title("Raw Data")
 d_ax.set_title("Deltas")
+dx_ax.set_title("x")
+dy_ax.set_title("y")
+dz_ax.set_title("z")
+
+dx_ax.set_ylim(-d_bound, d_bound)
+dy_ax.set_ylim(-d_bound, d_bound)
+dz_ax.set_ylim(-d_bound, d_bound)
+
 ax.legend()
 d_ax.legend()
 
