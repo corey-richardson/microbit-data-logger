@@ -85,9 +85,9 @@ d_ax.set_ylim(-d_bound, d_bound)
 fig.suptitle("micro:bit Data Logger")
 ax.set_title("Raw Data")
 d_ax.set_title("Deltas")
-dx_ax.set_title("x")
-dy_ax.set_title("y")
-dz_ax.set_title("z")
+dx_ax.set_title("dx")
+dy_ax.set_title("dy")
+dz_ax.set_title("dz")
 
 dx_ax.set_ylim(-d_bound, d_bound)
 dy_ax.set_ylim(-d_bound, d_bound)
@@ -105,8 +105,8 @@ def plot_peaks(axis, peaks):
     for peak in peaks:
         axis.axvline(peak, color="k", alpha=0.5)
 
-plot_peaks(dx_ax, x_peaks)
-plot_peaks(dy_ax, y_peaks)
-plot_peaks(dz_ax, z_peaks)
+# plot_peaks(dx_ax, x_peaks)
+# plot_peaks(dy_ax, y_peaks)
+# plot_peaks(dz_ax, z_peaks)
 
 plt.show()
