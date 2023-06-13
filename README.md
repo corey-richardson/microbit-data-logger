@@ -7,6 +7,7 @@
 - [aims](#aims)
 - [concerns](#concerns)
 - [relevant-practice-projects](#relevant-practice-projects)
+- [microbit-xyz-planes-and-orientations](#microbit-xyz-planes-and-orientation)
 - [flashing-to-microbit-using-web-based-text-editor](#flashing-to-microbit-using-web-based-text-editor)
 <br><br>
 
@@ -88,6 +89,12 @@ Final Project and Presentation - Archery Data Logger
 - [MakeCode Data Logger](https://microbit.org/projects/make-it-code-it/makecode-wireless-data-logger/)
 - [Python Data Logger](https://microbit.org/projects/make-it-code-it/python-wireless-data-logger/)
 - [Max-Min Temperature Logger](https://microbit.org/projects/make-it-code-it/max-min-thermometer/?editor=makecode)
+
+---
+
+## micro:bit XYZ Planes and Orientation
+
+![orientation](https://cdn.sanity.io/images/ajwvhvgo/production/f8184e1a5b4f3226b8b10902356ae62d988ff698-665x782.png?w=653&q=80&fit=max&auto=format)
 
 ---
 
