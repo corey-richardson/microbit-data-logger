@@ -4,12 +4,15 @@ import radio
 radio.on()
 
 def find_radio_group():
+    display.show(Image.SAD)
     for radioGroup in range(0, 255):
-        display.show(radioGroup)
+        # display.show(radioGroup)
         radio.config(group=radioGroup)
         message = radio.receive()
         if message:
+            display.show(Image.HAPPY)
             break
+
 
 # EXTENSION
 def decode(encrypted, shift):
