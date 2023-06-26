@@ -2,17 +2,7 @@
 from microbit import *
 import radio
 radio.on()
-
-def find_radio_group():
-    display.show(Image.SAD)
-    for radioGroup in range(0, 255):
-        # display.show(radioGroup)
-        radio.config(group=radioGroup)
-        message = radio.receive()
-        if message:
-            display.show(Image.HAPPY)
-            break
-
+radio.config(group=234)
 
 # EXTENSION
 def decode(encrypted, shift):
@@ -32,16 +22,15 @@ def decode(encrypted, shift):
     
 
 while True:
-    find_radio_group()
-
-    message = radio.receive()
-    if not message:
-        continue
+    if button_a.was_pressed():    
+        message = radio.receive()
+        if not message:
+            continue
+        
+        print(message)
+        display.scroll(message)
     
-    print(message)
-    display.scroll(message)
-
-    # EXTENSION
-    for shift in range(0, 26):
-        decrypted = decode(message, shift)
-        print(decrypted)
+        # EXTENSION
+        for shift in range(0, 26):
+            decrypted = decode(message, shift)
+            print(decrypted)
