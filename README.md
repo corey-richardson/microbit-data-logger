@@ -36,6 +36,7 @@ Final Project and Presentation - Archery Data Logger
 - [final-project-and-presentation](#final-project-and-presentation)
     - [project-selection](#project-selection)
     - [why](#why)
+    - [plan](#plan)
     - [what-went-well](#what-went-well)
     - [lessons-learned](#lessons-learned)
     - [testing-and-results](#testing-and-results)
@@ -444,21 +445,31 @@ data = pd.read_csv(file, header=0).reset_index()
 
 ```py
 fig = plt.figure(figsize=(10, 10))
-gs = GridSpec(6, 6, figure=fig)
+gs = GridSpec(9, 6, figure=fig)
 
 ax = fig.add_subplot(gs[0:3, 0:3])
 d_ax = fig.add_subplot(gs[0:3, 3:6])
+
 dx_ax = fig.add_subplot(gs[3:6, 0:2])
 dy_ax = fig.add_subplot(gs[3:6, 2:4])
 dz_ax = fig.add_subplot(gs[3:6, 4:6])
+
+xpeak_ax = fig.add_subplot(gs[6:9, 0:2])
+ypeak_ax = fig.add_subplot(gs[6:9, 2:4])
+zpeak_ax = fig.add_subplot(gs[6:9, 4:6])
 
 fig.tight_layout(pad=2.5)
 
 ax.axhline(0, color="k")
 d_ax.axhline(0, color="k")
+
 dx_ax.axhline(0, color="k")
 dy_ax.axhline(0, color="k")
 dz_ax.axhline(0, color="k")
+
+xpeak_ax.axhline(0, color="k")
+ypeak_ax.axhline(0, color="k")
+zpeak_ax.axhline(0, color="k")
 ```
 
 **Calculate Rolling Average:**
@@ -511,6 +522,7 @@ d_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
 
 **Plot Deltas Seperately:**
 
+This is done on both the `dn_ax` and the `npeak_ax` axis'.
 ```py
 dx_ax.plot(data.index, data.dx, "r--", label="X", alpha=ALPHA)
 dy_ax.plot(data.index, data.dy, "g--", label="Y", alpha=ALPHA)
@@ -519,11 +531,20 @@ dz_ax.plot(data.index, data.dz, "b--", label="Z", alpha=ALPHA)
 dx_ax.plot(rolling.index + ROLLER/2, rolling.dx, "r", label="X")
 dy_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
 dz_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
+
+xpeak_ax.plot(data.index, data.dx, "r--", label="X", alpha=ALPHA)
+ypeak_ax.plot(data.index, data.dy, "g--", label="Y", alpha=ALPHA)
+zpeak_ax.plot(data.index, data.dz, "b--", label="Z", alpha=ALPHA)
+
+xpeak_ax.plot(rolling.index + ROLLER/2, rolling.dx, "r", label="X")
+ypeak_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
+zpeak_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
+
 ```
 
 **Format the Plot:**
 
-Find the highest magnitude values (positive or negative) for the `x`, `y` and `z` as well as the `dx`, `dy` and `dz` columns of `rolling`. Use these +20% as the y-limits for the axis. The added percentage ensures the data is not crowded with the axis borders.
+Find the highest magnitude values (positive or negative) for the `x`, `y` and `z` as well as the `dx`, `dy` and `dz` columns of `rolling`. Use these +50% as the y-limits for the axis. The added percentage ensures the data is not crowded with the axis borders.
 ```py
 # Find max x, y, z magnitude for rolling data, then +50% as leeway
 ax_bound = abs( rolling[["x","y","z"]] ).max().max() * 1.5
@@ -531,14 +552,22 @@ ax.set_ylim(-ax_bound, ax_bound)
 # Find max x, y, z magnitude for rolling deltas, then +50% as leeway
 d_bound = abs( rolling[["dx","dy","dz"]] ).max().max() * 1.5
 d_ax.set_ylim(-d_bound, d_bound)
+# Find max x, y, z magnitude for rolling deltas, then +10% as leeway
+peak_bound = abs( rolling[["dx","dy","dz"]] ).max().max() * 1.1
 
 # Set titles and create legends
 fig.suptitle("micro:bit Data Logger")
+
 ax.set_title("Raw Data")
 d_ax.set_title("Deltas")
-dx_ax.set_title("x")
-dy_ax.set_title("y")
-dz_ax.set_title("z")
+
+dx_ax.set_title("dx")
+dy_ax.set_title("dy")
+dz_ax.set_title("dz")
+
+xpeak_ax.set_title("x_peaks")
+ypeak_ax.set_title("y_peaks")
+zpeak_ax.set_title("z_peaks")
 
 dx_ax.set_ylim(-d_bound, d_bound)
 dy_ax.set_ylim(-d_bound, d_bound)
@@ -551,22 +580,59 @@ d_ax.legend()
 
 **Plot Peaks:**
 
-Plot vertical lines at signal peaks; sudden movements.
+Plot vertical lines at signal peaks +/- 20; this signifies the zone cropped into on the lower plots.
 ```py
+from scipy import signal
 THRESHOLD = 200
 x_peaks, x_props = signal.find_peaks(rolling.dx, threshold=THRESHOLD)
 y_peaks, y_props = signal.find_peaks(rolling.dy, threshold=THRESHOLD)
 z_peaks, z_props = signal.find_peaks(rolling.dz, threshold=THRESHOLD)
 
-def plot_peaks(axis, peaks):
-    for peak in peaks:
-        axis.axvline(peak, color="k", alpha=0.5)
+# This function plots vertical lines on each of the seperated delta plots to 
+# indicate which section of the data is being cropped into on 
+# the proceeding plot.
+# It then crops into these areas
+# If no peaks are found it will delete that subplot.
+def plot_peaks(delta_axis, peak_axis, peaks):
+    try:
+        delta_axis.axvline(peaks[0] - 20, color="k", alpha=0.7)
+        delta_axis.axvline(peaks[0] + 20, color="k", alpha=0.7)
+        # Set the x and y bounds for each of the peak plots
+        peak_axis.set_xlim(peaks[len(peaks)//2] - 20, peaks[len(peaks)//2] + 20)
+        peak_axis.set_ylim(-peak_bound, peak_bound)
+    except IndexError:
+        print("No peaks found...")
+        print(peaks)
+        fig.delaxes(peak_axis)
 
-plot_peaks(dx_ax, x_peaks)
-plot_peaks(dy_ax, y_peaks)
-plot_peaks(dz_ax, z_peaks)
+plot_peaks(dx_ax, xpeak_ax, x_peaks)
+plot_peaks(dy_ax, ypeak_ax, y_peaks)
+plot_peaks(dz_ax, zpeak_ax, z_peaks)
 ```
 
+**Crop into peaks:**
+
+Use the 'middle index' peak to decide where to crop into.
+```py
+xpeak_ax.set_xlim(x_peaks[len(x_peaks)//2] - 20, x_peaks[len(x_peaks)//2] + 20)
+ypeak_ax.set_xlim(y_peaks[len(y_peaks)//2] - 20, y_peaks[len(y_peaks)//2] + 20)
+zpeak_ax.set_xlim(z_peaks[len(z_peaks)//2] - 20, z_peaks[len(z_peaks)//2] + 20)
+
+xpeak_ax.set_ylim(-peak_bound, peak_bound)
+ypeak_ax.set_ylim(-peak_bound, peak_bound)
+zpeak_ax.set_ylim(-peak_bound, peak_bound)
+```
+> Uses integer division.
+```
+>>> 1//2
+0
+>>> 2//2
+1
+>>> 3//2
+1
+>>> 4//2
+2
+```
 ### CSV Data 3D Visualiser
 
 **Imports:**
@@ -620,6 +686,8 @@ plt.show()
 ![csv-2d](/README_assets/file_2d.gif)
 ![csv-2d-w-deltas](/README_assets/raw_and_deltas.png)
 ![csv_xyz-seperated](/README_assets/xyz_seperated.png)
+![missing_peaks](/README_assets/missing_peaks.png)
+![recurve-peaks](/README_assets/recurve_peaks.png)
 ![csv-3d](/README_assets/file_3d.gif)
 ![csv-3d-with-ref-lines](/README_assets/not_connected_3d.png)
 
@@ -631,7 +699,30 @@ An interesting scenario to record could be archery. This would show how movement
 
 ### Project Selection
 
+Archery Stability Tracker: Measure the vibrations of a bow as it is fired. This could also be used to visualise different stages of the shot process; nocking, setting, aiming, loosing. 
+
+This could also be used to compare other variables:
+- Bowstyle: Recurve Vs. Compound
+- Vibration Dampening: With and without 'Limb Savers'
+- Distance: Do I aim / settle for longer at higher distances?
+
+### Plan
+
+- Write a script for the micro:bit to record accelerometer data in `.csv` format every `n` milliseconds.
+    - When Button "A" is pressed, start recording; would it be a good idea to include a 2-3 second delay to avoid recording 'interference'? If so, will need a visual indication and / or countdown.
+    - When Button "B" is pressed, stop recording.
+- Carry out signal pre-processing to mitigate random noise. This could be carried out with methods such as convolving (rolling averages) or even Kalman filtering.
+- Use Python's `matplotlib` module to visualise the movement in various formats: 2D and 3D lineplot.
+- Use Python's `matplotlib` module to visualise the rate of movement (deltas between datapoints).
+- Focus in on 'spikes' within the data, likely to be the moment of loosing.
+> DEFINITION - Loosing: The act of shooting an arrow from a bow.
+
 ### Why?
+
+I will be using `.csv` data in this project as opposed to serial port transfer between the micro:bit and a computer as this would allow the micro:bit to be a small and standalone unit; a long cable connecting two devices would pose a safety hazard if the wire got caught in the cam system of my compound bow.
+> DEFINITION - Cam System: Pulley/s on the limbs of the bow that 'hold' the draw weight at full draw. This allows you to hold a heavy draw weight as though it was a light draw weight meaning you can stay at a settled full draw for an extended time period. Or, a rotating piece of mechanical linkage that converts rotary motion into linear motion.
+
+Real-time logging could be achieved using the `radio` functionality of *two* micro:bits; one on the bow to record and transmit the data and on connected to a computer / laptop to receive and plot. This is demonstrated in [this](https://microbit.org/projects/make-it-code-it/python-wireless-data-logger/) project.
 
 ### What Went Well
 
