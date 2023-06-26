@@ -62,7 +62,7 @@ while true
 
 > This extension assumes some level of confidence in Python. It can also be completed on paper if preferred.
 
-What does `"ifmmp xpsme"` mean? <br>
+What does `"ifmmp xpsme!"` mean? <br>
 The message is encrypted using a Ceasar Shift!
 
 A Ceasar Shift Decoder can be written here as a function. Unlike the `find_radio_group()` procedure you wrote earlier, a function takes in arguments.
@@ -86,20 +86,19 @@ define 'decode' with parameters 'encrypted' and 'shift'
     for character in encrypted message
         if character is in the alphabet
             find position of the character in 'alphabet'
-            add the letter at index '(value - shift) MOD 26' to 'decoded'
+            add the letter at index 'value - shift' to 'decoded'
         else if character is in the 'number' string
             find position of the character in 'numbers'
-            add the letter at index '(value - shift) MOD 10' to 'decoded'
+            add the letter at index 'value - shift' to 'decoded'
         else
             # assume value is punctuation, doesn't need to be shifted.
             add the character to 'decoded'
 ```
 ```py
+decoded = ""
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 digits = "0123456789"
 ```
-
-> Information on the MOD / Modulus operator can be found below.
 
 You then need to call the `decode` function from the control loop.
 
@@ -113,15 +112,38 @@ for shift in range(0, 26):
 
 ---
 
-### MOD
+### String `.find()` Method
 
-In Python, the Modulus operator (`%`) returns the remainder of a division.
+The `.find()` method finds the first occurrence of the specified value. <br>
+The `.find()` method returns `-1` if the value is not found.
+
 ```py
-37 / 26 = 1.42... # Division
-37 // 26 = 1      # Integer (Whole Number) Division
-37 % 26 = 11      # Modulus
+company = "Collins Aerospace"
+print( company.find("A") ) ## prints "8"
 ```
+
+---
+
+### Indexing Into a List
+
+Use square brackets after the list name to index into a list. <br>
+Python uses zero-indexing for lists.
+
 ```py
-100 % 9 = 1
-# Because 100 / 9 = 11 with a remainder of 1.
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+print(alphabet[0]) # prints "a"
+print(alphabet[1]) # prints "b"
+print(alphabet[-1]) # prints "z"
 ```
+
+---
+
+## Portfolio
+
+- [ ] Importing Modules
+- [ ] `if` Statements
+- [ ] `if-elif-else` Statements
+- [ ] `while` Loops
+- [ ] `for` Loops
+- [ ] `break` Keyword
+- [ ] `continue` Keyword
