@@ -13,7 +13,7 @@ def do_something_else(argument):
 value = ""
 # start value, end_value (exclusive), step
 for i in range(6, 1, -1):
-    value += str(i)
+    value = ''.join(value, str(i))
 
 value = int(do_something(value)) // 10
 
