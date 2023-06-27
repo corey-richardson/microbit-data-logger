@@ -1,53 +1,55 @@
 # Rx
 
 ```py
-# Imports go at the top
 from microbit import *
+# Enable and set up radio configuration
 import radio
 radio.on()
+radio.config(group=234)
 
-def find_radio_group():
-    display.show(Image.SAD)
-    for radioGroup in range(0, 255):
-        # display.show(radioGroup)
-        radio.config(group=radioGroup)
-        message = radio.receive()
-        if message:
-            display.show(Image.HAPPY)
-            break
-
+# Iterate through letter in message and display
+# delay has default value of 400 (ms)
+def display_message(message):
+    for letter in message:
+        display.show(letter, delay=600)
 
 # EXTENSION
+# Ceasar shift decoder
 def decode(encrypted, shift):
-    plain_text = ""
-    alphabet = "abcdefghijklmnopqrstuvwxyz"
-    digits = "0123456789"
+    decoded = ""
+    ALPHABET = "abcdefghijklmnopqrtuvwxyz"
+    NUMBERS = "0123456789"
     for character in encrypted:
-        if character in alphabet:
-            value = alphabet.find(character)
-            plain_text += alphabet[value - shift]
-        elif character in digits:
-            value = digits.find(character)
-            plain_text += digits[value - shift]
-        else:
-            plain_text += character
-    return plain_text
-    
+        if character in ALPHABET:
+            position = ALPHABET.find(character)
+            decoded = decoded + ALPHABET[position - shift]
+        elif character in NUMBERS:
+            position = NUMBERS.find(character)
+            decoded = decoded + NUMBERS[position - shift]
+        else: # no shift needed
+            decoded = decoded + character
 
+# Initialse shift
+shift = 0
+
+# Control Loop
 while True:
-    find_radio_group()
-
-    message = radio.receive()
-    if not message:
-        continue
-    
-    print(message)
-    display.scroll(message)
-
     # EXTENSION
-    for shift in range(0, 26):
-        decrypted = decode(message, shift)
-        print(decrypted)
+    if button_a.was_pressed():
+        shift += 1
+        if shift > 9:
+            shift = 0
+    
+    if button_b.was_pressed():
+        message = radio.receive()
+        if not message:
+            continue
+
+        display_message(message)
+        display_message(decode(message, shift)) # EXTENSION
+
+        
+
 ```
 
 ---
@@ -66,12 +68,12 @@ def encode(plainText, shift):
     for character in plainText:
         if character in alphabet:
             value = alphabet.find(character)
-            coded += str(alphabet[(value+shift) % 26])
+            coded = plain_text + str(alphabet[(value+shift) % 26])
         elif character in digits:
             value = digits.find(character)
-            coded += str(digits[(value+shift) % 10])
+            coded = plain_text + str(digits[(value+shift) % 10])
         else:
-            coded += character
+            coded = plain_text + character
     return coded
     
 # You can use any group number between 0 and 255.
@@ -92,5 +94,5 @@ while True:
 
 ## MakeCode
 
-![](/radio_message_decoder/MakeCode.PNG)
+![](/radio_message_decoder/docu/MakeCode.PNG)
 

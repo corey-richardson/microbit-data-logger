@@ -12,36 +12,15 @@ Enable the radio on the micro:bit.
 The radio channel needs to be set to the same as the micro:bit transmitting the message.
 > Reference > Radio > Groups
 
-The group number could be set to ANY integer number between 0 and 255 - I will not tell you which it is. <br>
-You have two options here:
-1. Manually try each possible value (boring)
-2. Use a `for` loop to get the computer to try each value for you!
+Next comes the control loop. The control loop is the `while True` loop that will run infinitely whilst the device is powered.
 
-If you can, try to define a function called `find_radio_group` to *encapsulate* this process. This separation of concerns will help both reusability and readability.
-> Reference > Functions > Procedures
+When a button is pressed, attempt to `receive` a message. Assign this to button `B`.
+> Reference > Buttons > Button was pressed <br>
+> Reference > Radio > Receive a message
 
-An example of what this could look like written in Psuedo-code:
-```
-define function find_radio_group, no parameters
-    for number from 0 to 255
-        set group to number
-        receive message
-        if message is present
-            break from loop (and function)
-```
-This procedure would iterate through each integer value from 0 to 255. It would then set the radio group to that number. If it receives a message with content it will break from the loop, and the radio group will be set to the correct value.
-
-It may also be worth displaying the current loop value to the micro:bit's LED panel...
-> Reference > Display > Show
-
-Next comes the control loop. The control loop is the `while True` loop that will run infinetly whilst the device is powered.
-
-This is where you want to call your `find_radio_group` procedure.
-> Reference > Functions
-
-Then, attempt to `receive` a message. If you dont receive a message with content, `continue` to the next iteration of the `while` loop.
+If you dont receive a message with content, `continue` to the next iteration of the `while` loop. <br>
+The *logical operator* `not` can be used here to determine if the variable has no value: `if not {variable_name}:`
 > The keyword `continue` can be used here to skip the remaining code in the loop and move on to the next iteration to try again. <br>
-> You could add an attempt counter here to ensure the program doesn't run forever.
 
 If you have received a message, output it to the console and / or to the LED panel.
 > Reference > Display > Scroll
@@ -56,6 +35,21 @@ while true
     output message
 ```
 
+A function is a "chunk" of code that you can use over and over again, rather than writing it out multiple times. Functions enable programmers to break down or *decompose* a problem into smaller chunks, each of which performs a particular task. The basic structure for a function in Python is as so:
+```py
+def function_name(arg1, arg2):
+    ...
+```
+> Reference > Functions
+
+On second thought, you find that the `scroll` method doesn't give you enough time to record the message being output by the micro:bit. Replace this line with a function call to `display_message`, passing in the `message` as an argument. <br>
+Now, back towards the start of your program, define the function you have just called. <br>
+In this function, *iterate* through each `letter` in `message` and use the `display.show()` method to output this letter to the LED panel.
+> Reference > Display > Show
+
+You can change the amount of time each letter is displayed for with a second parameter in your call to `display.show()` - read the *documentation* to find out what this parameter is called.
+> Reference > Display > Show > More
+
 ---
 
 ## Extension
@@ -65,11 +59,7 @@ while true
 What does `"ifmmp xpsme!"` mean? <br>
 The message is encrypted using a Ceasar Shift!
 
-A Ceasar Shift Decoder can be written here as a function. Unlike the `find_radio_group()` procedure you wrote earlier, a function takes in arguments.
-```py
-def function_name(arg1, arg2):
-    ...
-```
+A Ceasar Shift Decoder can be written here as a function.
 
 For a Ceasar Shift we have two arguments to pass in:
 - The Encrypted Message
@@ -81,14 +71,14 @@ In psuedo-code this function would look like:
 ```
 define 'decode' with parameters 'encrypted' and 'shift'
     initialise empty string called 'decoded'
-    initialise string 'alphabet'
-    initialise string 'numbers'
+    initialise string 'ALPHABET'
+    initialise string 'NUMBERS'
     for character in encrypted message
-        if character is in the alphabet
-            find position of the character in 'alphabet'
+        if character is in the ALPHABET
+            find position of the character in 'ALPHABET'
             add the letter at index 'value - shift' to 'decoded'
         else if character is in the 'number' string
-            find position of the character in 'numbers'
+            find position of the character in 'NUMBERS'
             add the letter at index 'value - shift' to 'decoded'
         else
             # assume value is punctuation, doesn't need to be shifted.
@@ -96,18 +86,28 @@ define 'decode' with parameters 'encrypted' and 'shift'
 ```
 ```py
 decoded = ""
-alphabet = "abcdefghijklmnopqrstuvwxyz"
-digits = "0123456789"
+ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+NUMBERS = "0123456789"
 ```
+> Constants are unchanging variables. They are written in all capital letters with underscores separating words. Examples include `MAX_OVERFLOW` and `TOTAL`. <br>
+> You may need to see the notes on the `.find()` method towards the back of this document. Alternatively, you could find *documentation* explaining the usage of this method online!
 
-You then need to call the `decode` function from the control loop.
 
-As you don't know the value of the shift, use a `for` loop to iterate through each possibility (0 to 26).
+You should then to call the `decode` function from the control loop as an argument of 'display_message'. Add this to the area where you receive the message when a button is pressed.
+> Functions can be arguments to other *functions* and *procedures*. <br>
+> ```py
+> function_one( function_two(f2_arg_one, f2_arg_two) )
+> ```
 
-```py
-for shift in range(0, 26):
-    decrypted_message = decode(message, shift)
-    print(decrypted_message)
+Add functionality to set the magnitude of the `shift`. This could be done with button presses which increment a *counter variable*. Assign this to button `A`. Don't allow this value to be greater than 9. 
+```
+initialise shift to 0
+while true (control loop)
+    ...
+    on button press 
+        add 1 to shift
+        if shift bigger than 9
+            reset shift to 0
 ```
 
 ---
@@ -116,24 +116,19 @@ for shift in range(0, 26):
 
 The `.find()` method finds the first occurrence of the specified value. <br>
 The `.find()` method returns `-1` if the value is not found.
-
 ```py
 company = "Collins Aerospace"
 print( company.find("A") ) ## prints "8"
 ```
 
----
-
 ### Indexing Into a List
 
-Use square brackets after the list name to index into a list. <br>
-Python uses zero-indexing for lists.
-
+Use square brackets after the list name to index into a list. Python uses zero-indexing for lists.
 ```py
-alphabet = "abcdefghijklmnopqrstuvwxyz"
-print(alphabet[0]) # prints "a"
-print(alphabet[1]) # prints "b"
-print(alphabet[-1]) # prints "z"
+ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+print(ALPHABET[0]) # prints "a"
+print(ALPHABET[1]) # prints "b"
+print(ALPHABET[-1]) # prints "z"
 ```
 
 ---
@@ -145,5 +140,6 @@ print(alphabet[-1]) # prints "z"
 - [ ] `if-elif-else` Statements
 - [ ] `while` Loops
 - [ ] `for` Loops
-- [ ] `break` Keyword
 - [ ] `continue` Keyword
+- [ ] Functions and `return`ing from functions
+- [ ] User Input
