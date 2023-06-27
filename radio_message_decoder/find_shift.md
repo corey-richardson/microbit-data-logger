@@ -11,14 +11,14 @@ def do_something_else(argument):
     return a, b
 
 value = ""
-# start value, end_value (exclusive), step
+# start value, end value (exclusive), step
 for i in range(6, 1, -1):
-    value = ''.join(value, str(i))
+    value = ''.join([value, str(i)])
 
 value = int(do_something(value)) // 10
 
 radio_group, shift = do_something_else(value)
 
 print(f"Connect your micro:bit to group {radio_group}.")
-print(f"The Caesar Cipher is using a shift value of {shift}.")
+print(f"The Caesar Cipher is using a shift magnitude of {shift}.")
 ```
