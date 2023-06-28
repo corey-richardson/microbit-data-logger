@@ -8,10 +8,12 @@ radio.on()
 radio.config(group=234)
 
 # Iterate through letter in message and display
-# delay has default value of 400 (ms)
 def display_message(message):
     for letter in message:
-        display.show(letter, delay=600)
+        display.show(letter)
+        sleep(600)
+        display.clear()
+        sleep(50)
 
 # EXTENSION
 # Ceasar shift decoder
@@ -31,7 +33,6 @@ def decode(encrypted, shift):
 
 # Initialse shift
 shift = 0
-
 # Control Loop
 while True:
     # EXTENSION
@@ -47,12 +48,9 @@ while True:
 
         display_message(message)
         display_message(decode(message, shift)) # EXTENSION
-
-        
-
 ```
 
----
+<div style="page-break-after: always;"></div>
 
 ## Tx
 
@@ -89,10 +87,3 @@ while True:
     radio.send(encoded_message)
     display.show(Image.HAPPY)
 ```
-
----
-
-## MakeCode
-
-![](/radio_message_decoder/docu/MakeCode.PNG)
-
