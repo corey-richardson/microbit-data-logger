@@ -1,7 +1,5 @@
 # Receiver Notes and Hints
 
----
-
 ## Portfolio
 
 Process | Prior Knowledge | After Task
@@ -110,7 +108,7 @@ def function_name(arg1, arg2):
 ```
 > Reference > Functions
 
-On second thought, you find that the `scroll` method doesn't give you enough time to record the message being output by the micro:bit. Replace this line with a function call to `display_message`, passing in the `message` as an argument. <br>
+Upon testing you find that the `scroll` method doesn't give you enough time to record the message being output by the micro:bit. Replace this line with a function call to `display_message`, passing in the `message` as an argument. <br>
 If you tried to run the program now an *error* would occur as we have not yet provided a *definition* for this function!
 
 Back towards the start of your program, define the function you have just called. <br>
@@ -119,12 +117,41 @@ In this function, *iterate* through each `letter` in `message` using a `for` loo
 > Reference > Loops > For Loops > Letters <br>
 > Remember here that `message` is a *string*!
 
-Use the micro:bit's `sleep(ms)` function to create a delay between showing each character. <br>
+Use the micro:bit's `sleep(ms)` function to create a delay between showing each character, using an appropriate delay as the argument. <br>
 You may also want to use the `display.clear()` function after each letter to ensure there is a clear distinction between repeating letters.
 
 <div style="page-break-after: always;"></div>
 
-### 5. Decoding the message!
+### 5. Maintainability
+
+Comments in Python is the inclusion of short descriptions along with the code to increase its readability. A developer uses them to record their thought process while writing the code. It explains the basic logic behind why a particular line of code was written.
+
+In Python, comments are written using a hash symbol, `#`.
+
+For example, you could comment your code like so:
+```py
+# Open file explorer window for user to select CSV Data
+file = fd.askopenfilename(
+    filetypes=[("CSV files", "*.csv")], title="Set input .csv file" )
+# Read the selected CSV data into a 'Pandas' dataframe
+data = pd.read_csv(file, header=0)
+
+# Calculate the rolling average of the data.
+# This smoothens the data to account for noise; signal processing.
+ROLLER = 4
+rolling = data.rolling(ROLLER).mean()
+rolling = rolling.dropna().reset_index()
+```
+
+Notice how not every line has a comment. Avoid self-explanatory comments such as:
+```py
+ROLLER = 4 # Sets `ROLLER` to 4
+```
+
+Finally, add some *descriptive* comments to your code.
+> This would help you or another developer understand why the code was written in a certain way if you had to come back to this project in a number of years time when the original processes had been forgotten.
+
+### 6. Decoding the message!
 
 Use the 'Documentation Hunt' worksheet to follow the program flow and determine the output of the code provided. This should be done on the paper provided, not written into this script.
 
@@ -132,6 +159,32 @@ The output of this sheet will give you the `group` to use in the `radio.config()
 
 Encrypted Message: __ __ __ __ __ __ __ __ __ __ __ ! <br>
 Decrypted Message: __ __ __ __ __ __ __ __ __ __ __ !
+
+<div style="page-break-after: always;"></div>
+
+```
+import all from microbit
+import radio module
+
+enable the radio
+set the radio group
+
+define 'display_message' function with argument 'message'
+    for each letter in the message
+        display the letter
+        pause 
+        clear the screen
+        pause
+
+while true (control loop)
+    if button b was pressed
+    receive a message
+    if message is empty
+        continue to next loop iteration
+    
+    display the message with 'display_message' fuction
+```
+
 
 <div style="page-break-after: always;"></div>
 
@@ -199,6 +252,7 @@ while true (control loop)
 Encrypted Message: __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __
 
 Decrypted Message:  __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __
+
 
 <div style="page-break-after: always;"></div>
 
