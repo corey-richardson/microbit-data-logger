@@ -19,7 +19,7 @@ def display_message(message):
 # Ceasar shift decoder
 def decode(encrypted, shift):
     decoded = ""
-    ALPHABET = "abcdefghijklmnopqrtuvwxyz"
+    ALPHABET = "abcdefghijklmnopqrstuvwxyz"
     NUMBERS = "0123456789"
     for character in encrypted:
         if character in ALPHABET:
@@ -30,6 +30,7 @@ def decode(encrypted, shift):
             decoded = decoded + NUMBERS[position - shift]
         else: # no shift needed
             decoded = decoded + character
+    return decoded
 
 # Initialse shift
 shift = 0

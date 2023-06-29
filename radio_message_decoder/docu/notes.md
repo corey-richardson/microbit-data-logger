@@ -1,5 +1,20 @@
 # Receiver Notes and Hints
 
+## Contents
+
+- [portfolio](#portfolio)
+- [structure-guide-indentation](#structure-guide-indentation)
+- [template](#template)
+- [1-importing-modules](#1-importing-modules)
+- [2-receiving-a-message](#2-receiving-a-message)
+- [3-display-the-message](#3-display-the-message)
+- [4-writing-a-function](#4-writing-a-function)
+- [5-maintainability](#5-maintainability)
+- [6-decoding-the-message](#6-decoding-the-message)
+- [extension-decode-a-longer-message-with-automation](#extension---decode-a-longer-message-with-automation)
+- [string-find-method](#string-find-method)
+- [indexing-into-a-list](#indexing-into-a-list)
+
 ## Portfolio
 
 Process | Prior Knowledge | After Task
@@ -16,16 +31,18 @@ User Input |
 
 <div style="page-break-after: always;"></div>
 
-### Structure Guide: Indentation
+## Structure Guide: Indentation
 
 Where in other programming languages the indentation in code is for readability only, the indentation in Python is very important. <br>
-Python uses indentation to indicate a block of code. <br>
+Python uses indentation to indicate a *block* of code. <br>
 > Indentation refers to the spaces at the beginning of a code line.
 
-In this code, Python can see that the `print` statement *belongs to* the `if` statement and will only be run if the *condition* `5 > 2` is true.
+In this code, Python can see that the `print` statement *belongs to* the `if` statement and will only be run if the *condition* `5 > 2` is `True`. <br>
+The second `print` statement isn't part of the block, and so will run even if the `if` statement condition returns `False`.
 ```py
 if 5 > 2:
     print("Five is greater than two!")
+print("This line will run even if the condition returns false!")
 ```
 Python will give you an error if you skip the indentation:
 ```py
@@ -50,7 +67,7 @@ IndentationError: unexpected indent
 
 [python.microbit.org/v/3/](https://python.microbit.org/v/3/)
 
-### Template 
+## Template 
 
 Here is the code you should start with:
 ```py
@@ -60,7 +77,7 @@ while True:
     ...
 ```
 
-### 1. Importing Modules
+## 1. Importing Modules
 
 Start by importing all the modules / dependencies you will need to complete the task; you want to use the `radio` module.
 
@@ -70,21 +87,23 @@ Enable the radio on the micro:bit.
 The radio channel needs to be set to the same as the micro:bit transmitting the message. For now set this to any number between 0 and 255.
 > Reference > Radio > Groups
 
-### 2. Receiving a Message
+## 2. Receiving a Message
 
 Next comes the control loop. The control loop is the `while True` loop that will run infinitely whilst the device is powered.
+
+Remove the ellipsis placeholder. Similar to using three dots in English to omit content, you can use the ellipsis in Python as a placeholder for unwritten code.
 
 When a button is pressed, attempt to `receive` a message. Assign this to button `B`.
 > Reference > Buttons > Button was pressed <br>
 > Reference > Radio > Receive a message
 
-If you dont receive a message with content, `continue` to the next iteration of the `while` loop. <br>
-The *logical operator* `not` can be used here to determine if the variable has no value: `if not {variable_name}:`
+If you don't receive a message with content, `continue` to the next iteration of the `while` loop. <br>
+The *logical operator* `not` can be used here to determine if the variable has no value: `if not variable_name:`
 > The keyword `continue` can be used here to skip the remaining code in the loop and move on to the next iteration to try again. <br>
 
 <div style="page-break-after: always;"></div> <!-- new page -->
 
-### 3. Display the Message
+## 3. Display the Message
 
 If you have received a message, output it to the console and / or to the LED panel.
 > Reference > Display > Scroll
@@ -99,7 +118,7 @@ while true
         output message
 ```
 
-### 4. Writing a function 
+## 4. Writing a function 
 
 A function is a "chunk" of code that you can use over and over again, rather than writing it out multiple times. Functions enable programmers to break down or *decompose* a problem into smaller chunks, each of which performs a particular task. The basic structure for a function in Python is as so: 
 ```py
@@ -122,7 +141,7 @@ You may also want to use the `display.clear()` function after each letter to ens
 
 <div style="page-break-after: always;"></div>
 
-### 5. Maintainability
+## 5. Maintainability and Comments
 
 Comments in Python is the inclusion of short descriptions along with the code to increase its readability. A developer uses them to record their thought process while writing the code. It explains the basic logic behind why a particular line of code was written.
 
@@ -148,10 +167,10 @@ Notice how not every line has a comment. Avoid self-explanatory comments such as
 ROLLER = 4 # Sets `ROLLER` to 4
 ```
 
-Finally, add some *descriptive* comments to your code.
+Add some *descriptive* comments to your code.
 > This would help you or another developer understand why the code was written in a certain way if you had to come back to this project in a number of years time when the original processes had been forgotten.
 
-### 6. Decoding the message!
+## 6. Decoding the message!
 
 Use the 'Documentation Hunt' worksheet to follow the program flow and determine the output of the code provided. This should be done on the paper provided, not written into this script.
 
@@ -188,18 +207,18 @@ while true (control loop)
 
 <div style="page-break-after: always;"></div>
 
-## Extension - Decode a Longer Message with Automation
+## Extension - Manual Decipher vs. Software Decipher
 
 > This extension assumes some level of confidence in Python. It can also be completed on paper if preferred.
 
 What does `"ifmmp xpsme!"` mean? <br>
-The message is encrypted using a Ceasar Shift!
+The message is encrypted using a Caesar Shift!
 
 Whilst it is certainly possible, it will become very tedious if you had to keep decrypting these messages yourself. What if the messages you needed to decrypt were longer, or you had multiple to decrypt? You could use an *automation script* to do this for you!
 
-A Ceasar Shift Decoder can be written here as a function.
+A Caesar Shift Decoder can be written here as a function.
 
-For a Ceasar Shift we have two arguments to pass in:
+For a Caesar Shift we have two arguments to pass in:
 - The Encrypted Message
 - The Magnitude of the Shift
 
@@ -222,6 +241,7 @@ define 'decode' with parameters 'encrypted' and 'shift'
         else
             # assume value is punctuation, doesn't need to be shifted.
             add the character to 'decoded'
+    return 'decoded' to main program
 ```
 ```py
 decoded = ""
@@ -232,7 +252,7 @@ NUMBERS = "0123456789"
 > You may need to see the notes on the `.find()` method towards the back of this document. Alternatively, you could find *documentation* explaining the usage of this method online!
 
 
-You should then to call the `decode` function from the control loop as an argument of `display_message`. Add this to the area where you receive the message when a button is pressed.
+You should then call the `decode` function from the control loop as an argument of `display_message`. Add this to the area where you receive the message when a button is pressed.
 > Functions can be arguments to other *functions* and *procedures*.
 > ```py
 > function_one( function_two(f2_arg_one, f2_arg_two) )
@@ -256,7 +276,7 @@ Decrypted Message:  __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ 
 
 <div style="page-break-after: always;"></div>
 
-### String `.find()` Method
+## String `.find()` Method
 
 The `.find()` method finds the first occurrence of the specified value. <br>
 The `.find()` method returns `-1` if the value is not found.
@@ -265,7 +285,7 @@ company = "Collins Aerospace"
 print( company.find("A") ) ## prints "8"
 ```
 
-### Indexing Into a List
+## Indexing Into a List
 
 Use square brackets after the list name to index into a list. Python uses zero-indexing for lists.
 ```py
