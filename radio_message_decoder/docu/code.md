@@ -76,11 +76,11 @@ def encode(plainText, shift):
     return coded
     
 # You can use any group number between 0 and 255.
-SECRET = 234
+SECRET = ... # SET ME
 radio.config(group=SECRET)
 radio.on()
 
-SHIFT = 5
+SHIFT = ... # SET ME
 MESSAGE = ""
 encoded_message = encode(MESSAGE, SHIFT) 
 
