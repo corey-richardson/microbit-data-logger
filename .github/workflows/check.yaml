@@ -1,4 +1,4 @@
-name: Checker
+name: Lint and Test
 on: [push, workflow_dispatch]
 
 jobs:

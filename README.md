@@ -1,5 +1,7 @@
 # Data Logger Project
 
+[![Checker](https://github.com/corey-richardson/microbit-data-logger/actions/workflows/check.yaml/badge.svg)](https://github.com/corey-richardson/microbit-data-logger/actions/workflows/check.yaml)
+
 ---
 
 ## Contents
