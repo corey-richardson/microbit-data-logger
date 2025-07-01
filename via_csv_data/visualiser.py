@@ -1,4 +1,4 @@
-# Filedialog opens a File Explorer Window, allowing the user to select the 
+# Filedialog opens a File Explorer Window, allowing the user to select the
 # CSV Data to read into a dataframe.
 from tkinter import filedialog as fd
 # Pandas provides dataframe management
@@ -11,7 +11,7 @@ from scipy import signal
 
 # Open file explorer window for user to select CSV Data
 file = fd.askopenfilename(
-    filetypes=[("CSV files", "*.csv")],title="Set input .csv file" )
+    filetypes=[("CSV files", "*.csv")], title="Set input .csv file")
 # Read the selected data into a dataframe
 # .reset_index() creates an index column
 data = pd.read_csv(file, header=0).reset_index()
@@ -57,9 +57,9 @@ ax.plot(data.index, data.x, "r--", label="X", alpha=ALPHA)
 ax.plot(data.index, data.y, "g--", label="Y", alpha=ALPHA)
 ax.plot(data.index, data.z, "b--", label="Z", alpha=ALPHA)
 # Plot the data - rolling averaged
-ax.plot(rolling.index + ROLLER/2, rolling.x, "r", label="X")
-ax.plot(rolling.index + ROLLER/2, rolling.y, "g", label="Y")
-ax.plot(rolling.index + ROLLER/2, rolling.z, "b", label="Z")
+ax.plot(rolling.index + ROLLER / 2, rolling.x, "r", label="X")
+ax.plot(rolling.index + ROLLER / 2, rolling.y, "g", label="Y")
+ax.plot(rolling.index + ROLLER / 2, rolling.z, "b", label="Z")
 
 # Calculate the deltas - pure
 data['dx'] = data['x'] - data['x'].shift(-1)
@@ -75,18 +75,18 @@ d_ax.plot(data.index, data.dx, "r--", label="X", alpha=ALPHA)
 d_ax.plot(data.index, data.dy, "g--", label="Y", alpha=ALPHA)
 d_ax.plot(data.index, data.dz, "b--", label="Z", alpha=ALPHA)
 # Plot the deltas - rolling averaged
-d_ax.plot(rolling.index + ROLLER/2, rolling.dx, "r", label="X")
-d_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
-d_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
+d_ax.plot(rolling.index + ROLLER / 2, rolling.dx, "r", label="X")
+d_ax.plot(rolling.index + ROLLER / 2, rolling.dy, "g", label="Y")
+d_ax.plot(rolling.index + ROLLER / 2, rolling.dz, "b", label="Z")
 
-# Plot the deltas on seperated axis - pure 
+# Plot the deltas on seperated axis - pure
 dx_ax.plot(data.index, data.dx, "r--", label="X", alpha=ALPHA)
 dy_ax.plot(data.index, data.dy, "g--", label="Y", alpha=ALPHA)
 dz_ax.plot(data.index, data.dz, "b--", label="Z", alpha=ALPHA)
-# Plot the deltas on seperated axis - rolling averaged 
-dx_ax.plot(rolling.index + ROLLER/2, rolling.dx, "r", label="X")
-dy_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
-dz_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
+# Plot the deltas on seperated axis - rolling averaged
+dx_ax.plot(rolling.index + ROLLER / 2, rolling.dx, "r", label="X")
+dy_ax.plot(rolling.index + ROLLER / 2, rolling.dy, "g", label="Y")
+dz_ax.plot(rolling.index + ROLLER / 2, rolling.dz, "b", label="Z")
 
 # Plot the deltas on seperated axis - pure
 # These will be cropped in to only display the peak
@@ -95,18 +95,18 @@ ypeak_ax.plot(data.index, data.dy, "g--", label="Y", alpha=ALPHA)
 zpeak_ax.plot(data.index, data.dz, "b--", label="Z", alpha=ALPHA)
 # Plot the deltas on seperated axis - rolling averaged
 # These will be cropped in to only display the peak
-xpeak_ax.plot(rolling.index + ROLLER/2, rolling.dx, "r", label="X")
-ypeak_ax.plot(rolling.index + ROLLER/2, rolling.dy, "g", label="Y")
-zpeak_ax.plot(rolling.index + ROLLER/2, rolling.dz, "b", label="Z")
+xpeak_ax.plot(rolling.index + ROLLER / 2, rolling.dx, "r", label="X")
+ypeak_ax.plot(rolling.index + ROLLER / 2, rolling.dy, "g", label="Y")
+zpeak_ax.plot(rolling.index + ROLLER / 2, rolling.dz, "b", label="Z")
 
 # Find max x, y, z magnitude for rolling data, then +50% as leeway
-ax_bound = abs( rolling[["x","y","z"]] ).max().max() * 1.5
+ax_bound = abs(rolling[["x", "y", "z"]]).max().max() * 1.5
 ax.set_ylim(-ax_bound, ax_bound)
 # Find max x, y, z magnitude for rolling deltas, then +50% as leeway
-d_bound = abs( rolling[["dx","dy","dz"]] ).max().max() * 1.5
+d_bound = abs(rolling[["dx", "dy", "dz"]]).max().max() * 1.5
 d_ax.set_ylim(-d_bound, d_bound)
 # Find max x, y, z magnitude for rolling deltas, then +10% as leeway
-peak_bound = abs( rolling[["dx","dy","dz"]] ).max().max() * 1.1
+peak_bound = abs(rolling[["dx", "dy", "dz"]]).max().max() * 1.1
 
 # Set titles and create legends
 # Main figure title
@@ -138,8 +138,9 @@ x_peaks, x_props = signal.find_peaks(rolling.dx, threshold=THRESHOLD)
 y_peaks, y_props = signal.find_peaks(rolling.dy, threshold=THRESHOLD)
 z_peaks, z_props = signal.find_peaks(rolling.dz, threshold=THRESHOLD)
 
-# This function plots vertical lines on each of the seperated delta plots to 
-# indicate which section of the data is being cropped into on 
+
+# This function plots vertical lines on each of the seperated delta plots to
+# indicate which section of the data is being cropped into on
 # the proceeding plot.
 # It then crops into these areas
 # If no peaks are found it will delete that subplot.
@@ -148,12 +149,15 @@ def plot_peaks(delta_axis, peak_axis, peaks):
         delta_axis.axvline(peaks[0] - 20, color="k", alpha=0.7)
         delta_axis.axvline(peaks[0] + 20, color="k", alpha=0.7)
         # Set the x and y bounds for each of the peak plots
-        peak_axis.set_xlim(peaks[len(peaks)//2] - 20, peaks[len(peaks)//2] + 20)
+        peak_axis.set_xlim(
+            peaks[len(peaks) // 2] - 20, peaks[len(peaks) // 2] + 20
+        )
         peak_axis.set_ylim(-peak_bound, peak_bound)
     except IndexError:
         print("No peaks found...")
         print(peaks)
         fig.delaxes(peak_axis)
+
 
 plot_peaks(dx_ax, xpeak_ax, x_peaks)
 plot_peaks(dy_ax, ypeak_ax, y_peaks)

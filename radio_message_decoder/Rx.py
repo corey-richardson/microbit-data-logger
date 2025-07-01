@@ -4,6 +4,7 @@ import radio
 radio.on()
 radio.config(group=234)
 
+
 # EXTENSION
 def decode(encrypted, shift):
     plain_text = ""
@@ -19,17 +20,17 @@ def decode(encrypted, shift):
         else:
             plain_text += character
     return plain_text
-    
+
 
 while True:
-    if button_a.was_pressed():    
+    if button_a.was_pressed():
         message = radio.receive()
         if not message:
             continue
-        
+
         print(message)
         display.scroll(message)
-    
+
         # EXTENSION
         for shift in range(0, 26):
             decrypted = decode(message, shift)

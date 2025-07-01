@@ -1,0 +1,25 @@
+name: Checker
+on: [push, workflow_dispatch]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      - name: Install Dependencies
+        run: pip install -r ./.github/workflows/requirements.txt
+
+      - name: Run Linting
+        run: |
+          flake8 --ignore=F401,F403,F405 */*.py
+          pylint --errors-only --disable=E0401 --disable=E0602 radio_message_decoder/*.py
+    
+      - name: Run Unit Tests
+        run: echo "No unit tests to run."
+    

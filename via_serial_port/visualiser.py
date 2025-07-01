@@ -1,17 +1,17 @@
 from matplotlib import pyplot as plt
 from matplotlib import animation
 from numpy import diff
-import serial
+import serial  # pip install pyserial
 
 # Windows Device Manager > Ports (COM & LPT) > "mbed Serial Port"
 PORT = 'COM3'
-BAUD_RATE = 115_200 # ENSURE THIS MATCHES VALUE IN DEVICE MANAGER
+BAUD_RATE = 115_200  # ENSURE THIS MATCHES VALUE IN DEVICE MANAGER
 STOP = 1
 
 LIMIT = 300
-RATE = 50 # ms
+RATE = 50  # ms
 
-estimated_timings = range(int(LIMIT//10), 0, -1)
+estimated_timings = range(int(LIMIT // 10), 0, -1)
 
 ser = serial.Serial(PORT, BAUD_RATE, timeout=STOP)
 ser.close()
@@ -20,27 +20,28 @@ ser.open()
 fig = plt.figure()
 ax = fig.add_subplot(2, 1, 1)
 d_ax = fig.add_subplot(2, 1, 2)
-    
-xs, ys, zs = [0]*LIMIT, [0]*LIMIT, [0]*LIMIT
+
+xs, ys, zs = [0] * LIMIT, [0] * LIMIT, [0] * LIMIT
+
 
 def animate(i, xs, ys, zs):
-        
+
     line = ser.readline().decode("utf-8").strip("(").strip(")\r\n")
     x, y, z = line.split(",")
     x, y, z = int(x), int(y), int(z)
-    
+
     print(x, y, z)
-    
+
     idx = range(LIMIT)
     d_idx = range(LIMIT - 1)
     xs.append(x)
     ys.append(y)
     zs.append(z)
-    
+
     xs = xs[-LIMIT:]
     ys = ys[-LIMIT:]
     zs = zs[-LIMIT:]
-    
+
     d_xs = diff(xs)
     d_ys = diff(ys)
     d_zs = diff(zs)
@@ -48,16 +49,16 @@ def animate(i, xs, ys, zs):
     if len(xs) == LIMIT:
         ax.clear()
         d_ax.clear()
-        
+
         ax.plot(idx, xs, color="r", label="X")
         ax.plot(idx, ys, color="g", label="Y")
         ax.plot(idx, zs, color="b", label="Z")
-        
+
         d_ax.plot(d_idx, d_xs, color="r")
         d_ax.plot(d_idx, d_ys, color="g")
         d_ax.plot(d_idx, d_zs, color="b")
         d_ax.axhline(0, color="k")
-    
+
     ax.set_ylim(-1500, 1500)
     d_ax.set_ylim(-1500, 1500)
 
@@ -70,10 +71,11 @@ def animate(i, xs, ys, zs):
     # ax.set_xticks(range(0, LIMIT, 10), estimated_timings)
     # d_ax.set_xticks(range(0, LIMIT, 10), estimated_timings)
 
+
 ani = animation.FuncAnimation(
-    fig, 
-    animate, fargs=(xs, ys, zs), 
-    interval=RATE )
+    fig,
+    animate, fargs=(xs, ys, zs),
+    interval=RATE)
 
 plt.show()
 

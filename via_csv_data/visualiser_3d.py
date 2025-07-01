@@ -1,4 +1,4 @@
-# Filedialog opens a File Explorer Window, allowing the user to select the 
+# Filedialog opens a File Explorer Window, allowing the user to select the
 # CSV Data to read into a dataframe.
 from tkinter import filedialog as fd
 # Pandas provides dataframe management
@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 
 # Open file explorer window for user to select CSV Data
 file = fd.askopenfilename(
-    filetypes=[("CSV files", "*.csv")],title="Set input .csv file" )
+    filetypes=[("CSV files", "*.csv")], title="Set input .csv file")
 # Read the selected data into a dataframe
 data = pd.read_csv(file, header=0)
 
@@ -20,7 +20,7 @@ ax = plt.axes(projection='3d')
 ax.plot3D(data.x, data.y, data.z)
 
 # Set the figures x, y and z bound limits
-bound = 1500 # +/-
+bound = 1500  # +/-
 ax.set_xlim(-bound, bound)
 ax.set_ylim(-bound, bound)
 ax.set_zlim(-bound, bound)
