@@ -1,3 +1,5 @@
+---
+
 name: Lint and Test
 on: [push, workflow_dispatch]
 
@@ -15,6 +17,9 @@ jobs:
       - name: Install Dependencies
         run: pip install -r ./.github/workflows/requirements.txt
 
+      - name: Run yamllint
+        run: "yamllint -d \"{line-length: {max: 120}}\" ./.github/workflows/check.yaml"
+
       - name: Run flake8
         run: flake8 --ignore=F401,F403,F405 */*.py
 
@@ -23,4 +28,3 @@ jobs:
 
       - name: Run Unit Tests
         run: echo "No unit tests to run."
-    
